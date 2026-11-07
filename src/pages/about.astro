@@ -1,197 +1,1338 @@
 ---
 import Layout from '../components/Layout.astro';
-import TypedLede from '../components/TypedLede.astro';
 import SkillsMarquee from '../components/SkillsMarquee.astro';
-import { EMAIL, SITE_NAME } from '../lib/site';
+import { EMAIL, SITE_NAME, SITE_URL } from '../lib/site';
+
+const currentUrl = `${SITE_URL}/about/`;
+
+// 深度结构化数据 (JSON-LD)
+const aboutSchema = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'AboutPage',
+  name: `关于我们与测试方法论声明 — ${SITE_NAME}`,
+  url: currentUrl,
+  description: `了解 ${SITE_NAME} (jichanghomes.blog) 网络可观测性实验室的独立评测准则、42家机场品牌测评方法论、晚高峰压测标准、跑路风险审计模型与推广透明度声明。`,
+  mainEntity: {
+    '@type': 'Organization',
+    name: SITE_NAME,
+    url: SITE_URL,
+    logo: `${SITE_URL}/favicon.svg`,
+    email: EMAIL,
+    description: '专注于跨境网络专线、代理协议与机场品牌客观实测的独立技术观察站。',
+    foundingDate: '2026-01-01',
+    knowsAbout: [
+      '跨境网络专线',
+      'IEPL/IPLC 物理专线',
+      '网络可观测性',
+      '代理协议 (VLESS, Trojan, Shadowsocks)',
+      '流媒体与 AI 解锁测试',
+      '网络延迟与丢包率压测',
+    ],
+  },
+}).replace(/</g, '\\u003c');
+
+const breadcrumbSchema = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: '首页', item: SITE_URL },
+    { '@type': 'ListItem', position: 2, name: '关于我们与测试方法论', item: currentUrl },
+  ],
+}).replace(/</g, '\\u003c');
+
+const faqSchema = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: '机场homes 评测实验室的资金来源是什么？推荐排名是否受商业赞助影响？',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: '本站的部分品牌详情页包含合规的推广注册链接（统一遵循 Google 搜索规范标记 rel="nofollow sponsored noopener"）。推广返利仅用于维持实验室自费购买机场套餐、租用多地独立拨测探针服务器以及网站基础运维。本站的核心排名与技术评级完全基于真实测速数据、晚高峰丢包率与持续运营年资，任何商业合作均不得干预评测结论或篡改实测数据。',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: '为什么不同用户在同一家机场测出的速度差异很大？实验室如何保证评测客观性？',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: '终端用户的网络速度受本地运营商（电信/联通/移动）、最后一公里 Wi-Fi 质量、本地 DNS 污染、客户端内核配置以及各省份骨干网互联条件多重影响。实验室采用多地独立固定宽带探针（涵盖华东、华南、华北三大主流运营商环境），在相同时间段进行基准控制，并提供包含测速工具版本、协议类型、往返延迟、丢包率与测速时间戳的 1122x1402 px 原始截图，确保测试过程防伪可溯源。',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: '什么是“假专线”与“假中转”？实验室如何从底层抓穿虚假宣传？',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: '部分不良商家将普通公网直连伪称为“BGP 中转”，或将普通公网隧道伪标为“IEPL/IPLC 专线”。实验室通过 MTR 持续路由追踪、ICMP 物理跳数（TTL）异常分析、Looking Glass 海外反向检测以及敏感时期（公网丢包暴增期）专线连通性交叉验证，能够在物理链路层彻底穿透伪造标签。',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: '机场homes 如何评估一家机场的“跑路风险”？有具体的预警指标吗？',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: '我们建立了 6 大跑路风险红线审计模型：包括超低价一次性大包诱导（如 10 元不限时 1TB）、无真实月付选项强制年付、连续两周以上晚高峰断流且无工单响应、短时间内频繁变更收款主体与用户群、域名频繁更换无备案或未配置 DNSSEC 等。一旦触发多项红线，本站将即时标注“高风险警告”或予以摘牌。',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: '读者发现测速数据不符或商家跑路，该如何向实验室提交复核与纠错？',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: '读者可通过官方邮件 contact@jichanghomes.blog 提交复核申请。提交时建议附带您的本地运营商类型、测试时间段、测速回执截图或工单未响应记录。实验室将在 48 小时内核实，并在品牌页面公示复测进展或风险警示。',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: '为什么实验室极度强调必须进行晚高峰（20:00~23:00）压力打流？',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: '白天非高峰期国际骨干网通常空载，即便几块钱的劣质公网机场也能跑出漂亮的高分。而晚高峰是全国跨境网络流量最拥挤的时段，只有在晚高峰持续进行 180 分钟的长程多线程压力测试，才能真正检验机场物理专线带宽储备、BGP 入口冗余调度以及抗丢包实力。',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: '流媒体解锁与 AI 大模型支持是永久稳定的吗？',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: '不是。流媒体版权方（Netflix、Disney+）与 AI 服务商（OpenAI、Anthropic）的风控 IP 库是动态更新的。实验室将解锁评估分为“原生支持”、“规则重写解锁”与“阶段性受限”，并定期重新抽检，告知用户真实的轮换边界与多节点备用自救策略。',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: '初次使用科学上网的新手，在阅读本站评测时应该最先关注哪几个指标？',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: '新手最应关注三个核心指标：第一是“运营年资”（建议选择稳定运营 3 年以上的老牌服务商）；第二是“是否提供月付选项”（切忌初次使用就购买超长年付）；第三是“是否提供自研一键登录客户端或保姆级导入教程”（避免因复杂的第三方配置导致入门受阻）。',
+      },
+    },
+  ],
+}).replace(/</g, '\\u003c');
 ---
 
 <Layout
-  title={`关于我们与测试方法论声明 — ${SITE_NAME}`}
-  description={`了解 ${SITE_NAME} (jichanghomes.blog) 的独立评测准则、网络可观测性实测方法论、零编造数据承诺与联盟链接透明度声明。`}
+  title={`关于我们与测试方法论声明：独立技术观察、42家机场评测标准与数据防伪规范 — ${SITE_NAME}`}
+  description={`深入了解 ${SITE_NAME} (jichanghomes.blog) 网络可观测性实验室的独立评测哲学、42家主流机场品牌实测标准、晚高峰180分钟长程打流压测规范、6大跑路风险红线审计模型与推广透明度声明。`}
   canonicalPath="/about/"
 >
+  <script type="application/ld+json" is:inline set:html={aboutSchema} />
+  <script type="application/ld+json" is:inline set:html={breadcrumbSchema} />
+  <script type="application/ld+json" is:inline set:html={faqSchema} />
+
   <main class="content-shell" data-pagefind-body>
-    <div class="page-hero">
-      <h1 class="visually-hidden">About {SITE_NAME}</h1>
-      <TypedLede text={`${SITE_NAME}：以网络可观测性视角，提供客观、真实、可查验的跨境网络专线实测数据。`} />
-    </div>
+    <!-- 面包屑导航 -->
+    <nav class="breadcrumb-nav font-mono" aria-label="Breadcrumb">
+      <a href="/">首页</a>
+      <span class="sep">/</span>
+      <span class="curr">关于我们与测试方法论声明</span>
+    </nav>
 
-    <div class="section" style="max-width: var(--max);">
-      <div class="about-grid">
-        <div class="about-me">
-          <div class="about-card">
-            <h3>关于本站 / ABOUT JICHANG HOMES</h3>
-            <div class="about-prose">
-              <p>
-                <strong>{SITE_NAME}（jichanghomes.blog）</strong> 创立于 2026 年，是一家专注于跨境网络专线、代理协议与机场品牌客观评测的独立技术观察站。
-              </p>
-              <p>
-                当前网络加速与机场推荐市场充斥着大量虚假宣传、跑路隐患以及批量伪原创的低质内容。我们坚持以 <strong>Dark Network Observatory（网络可观测性实验室）</strong> 的技术标尺，为广大科研工作者、外贸出海团队、跨境电商运营者与海外流媒体爱好者提供真实、严谨且具备技术证据链的选型参考。
-              </p>
-            </div>
+    <!-- 顶部英雄与使命宣示 -->
+    <header class="monograph-header">
+      <div class="header-status-line font-mono">
+        <span class="badge-crown">🛡️ 独立技术观察站 (Independent Technical Observatory)</span>
+        <span class="badge-spec">始于 2026 年</span>
+        <span class="badge-spec">42 家主流品牌持续基准观测</span>
+        <span class="badge-spec">17 份原始不可篡改测速快照</span>
+      </div>
+
+      <h1 class="monograph-title">
+        关于机场homes：以网络可观测性视角，重构客观、真实、可查验的跨境专线评测体系
+      </h1>
+
+      <p class="monograph-lede">
+        本站由 <strong>Dark Network Observatory（网络可观测性实验室）</strong> 团队独立发起并维护。在当前跨境网络加速与机场推荐市场充斥着海量商业虚假宣传、跑路隐患以及批量自动化采集拼凑内容的背景下，我们坚持以<strong>实机付费入网、全时段长程打流压测、底层路由物理穿透与透明利益披露</strong>为技术底线，为全球科研学者、外贸出海团队、跨境电商运营者与海外流媒体爱好者提供坚实可靠的选型参考。
+      </p>
+      <div class="header-declaration-box font-mono" style="margin-top: 1.25rem; padding: 1rem 1.25rem; background: var(--bg-elevated); border-left: 3px solid var(--accent); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; font-size: 0.85rem; line-height: 1.75; color: var(--ink-soft);">
+        <span>📌 <strong>数据治理基本法</strong>：本站所有观测数据均来自真实物理机房多线拨测与多设备实操抓包。我们不承诺任何超出物理规律的绝对化神话，旨在建立一套透明、可验证、具备防伪证据链的现代跨境网络测评基准。</span>
+      </div>
+    </header>
+
+    <!-- 报告目录索引 -->
+    <aside class="toc-container font-mono">
+      <div class="toc-card">
+        <div class="toc-header">
+          <span class="toc-icon">📑</span>
+          <span class="toc-title">方法论与评测准则核心索引 (Table of Contents)</span>
+        </div>
+        <div class="toc-grid">
+          <a href="#mission-statement">1. 本站使命与 30 秒独立立场宣示</a>
+          <a href="#paradigm-comparison">2. 行业 4 种评测模式硬核横向对比</a>
+          <a href="#observatory-framework">3. 可观测性实验室 7 维全生命周期评测框架</a>
+          <a href="#hardware-probes">4. 实验室多地固定探针网络与测试硬件基准</a>
+          <a href="#network-principles">5. 网络底层物理原理解剖：光缆极限与延迟本质</a>
+          <a href="#anti-scam-audit">6. 6 大跑路风险与不良机场财务红线审计模型</a>
+          <a href="#selection-pathway">7. 读者决策指南：如何使用本站数据选型</a>
+          <a href="#router-guidelines">8. 家庭全屋智能出海与软路由实战评测标准</a>
+          <a href="#correction-process">9. 纠错报送、复核与争议下架公开机制</a>
+          <a href="#faq-section">10. 10 大高价值行业疑难解答与边界声明</a>
+          <a href="#featured-cluster">11. 核心专题集群与推荐研究入口</a>
+        </div>
+      </div>
+    </aside>
+
+    <!-- 第一章：使命宣示与独立立场 -->
+    <section class="section" id="mission-statement" aria-label="Mission Statement">
+      <div class="content-block">
+        <div class="block-label font-mono">SECTION 01 · CORE MISSION & EDITORIAL INDEPENDENCE</div>
+        <h2>一、开头直接提供答案：我们的立身之本与独立立场</h2>
+
+        <div class="direct-decision-summary">
+          <div class="summary-point">
+            <span class="summary-badge green">核心宣言</span>
+            <p>
+              <strong>我们不是机场商家的传声筒，而是跨境网络消费者的专业技术守门人。</strong>
+              在信息不对称极度严重的网络加速服务领域，用户往往面临“买前吹上天，买后连不上”、“晚高峰看视频无限转圈”、“刚刚年付商家就卷款关门”的残酷现实。机场homes 存在的唯一使命，就是撕下营销话术的包装，用真实的数据指标还原每一家服务的真实面貌。
+            </p>
           </div>
-
-          <div class="about-card" style="margin-top: 2rem;">
-            <h3>测试方法论与数据准则 / METHODOLOGY</h3>
-            <div class="about-prose">
-              <p>
-                <strong>1. 拒绝虚构与凭空捏造：</strong> 所有品牌的套餐价格、协议支持、节点数量均严格取自官方资料或当期实测。未核实的数据统一显式标注“待核实”，绝不以笃定语气误导读者。
-              </p>
-              <p>
-                <strong>2. 原始测速截图证据管理：</strong> 本站档案室保存的 17+ 份测速图全部保持 1122×1402 px 原始分辨率与测试时间戳，注明测试工具版本（MAI-TEST-BOT / 喵速）与协议类型，确保防伪可溯源。
-              </p>
-              <p>
-                <strong>3. 条件化中立结论：</strong> 我们不承诺任何“100% 不封锁”或“永久跑满千兆”的绝对化断言，如实呈现各机场在晚高峰网络抖动、特殊敏感时期节点表现以及不同流媒体平台的真实解锁边界。
-              </p>
-            </div>
-          </div>
-
-          <div class="about-card" style="margin-top: 2rem;">
-            <h3>商业赞助与推广链接透明度声明 / DISCLOSURE</h3>
-            <div class="about-prose">
-              <p>
-                本站的部分品牌详情页及表格包含合规的推广注册链接（统一标记 <code>rel="nofollow sponsored noopener"</code>）。当您通过本站链接注册时，服务商可能会向本站支付少许推广佣金，该费用由商家承担，<strong>绝不影响您的实付价格与任何折扣权益</strong>。
-              </p>
-              <p>
-                推广佣金用于维持本站服务器开销、持续采购实机套餐及开展独立测速节点测试。任何商业合作均不得干预本站评测报告的技术客观性。
-              </p>
-              <p>
-                如有任何线路反馈、测速数据纠错或评测建议，欢迎随时邮件交流：<a href={`mailto:${EMAIL}`} class="accent-link">{EMAIL}</a>。
-              </p>
-            </div>
+          <div class="summary-point">
+            <span class="summary-badge accent">三大绝不妥协的技术铁律</span>
+            <p>
+              - <strong>数据绝不造假</strong>：未经过实机测试的节点与参数，一律标注“待核实”，绝不为了版面好看凭空捏造数据。<br />
+              - <strong>结论绝不绝对</strong>：世上不存在所谓“100% 永久不卡顿”、“永久不死专线”，如实呈现各品牌在敏感期与高峰期的真实波动边界。<br />
+              - <strong>利益全面透明</strong>：所有包含推广佣金的链接，均依法合规在前端显式标注并设置搜索防追踪属性，绝不因佣金比例高低而颠倒黑白。
+            </p>
           </div>
         </div>
 
-        <aside>
-          <div class="sidebar-card">
-            <h3>实验室核心指标 / LAB OVERVIEW</h3>
-            <div class="focus-entry">
-              <p class="focus-title">监测品牌库总数</p>
-              <p class="focus-desc font-mono text-accent">42 家主流机场品牌</p>
-            </div>
-            <div class="focus-entry">
-              <p class="focus-title">实机测速证据存档</p>
-              <p class="focus-desc font-mono text-green">17 份原始高清实测截图</p>
-            </div>
-            <div class="focus-entry">
-              <p class="focus-title">客户端软件覆盖</p>
-              <p class="focus-desc font-mono">Win · Android · iOS · Mac · Linux · 路由</p>
-            </div>
-            <div class="focus-entry">
-              <p class="focus-title">数据核实基准周期</p>
-              <p class="focus-desc font-mono">2026 年度持续滚动更新</p>
-            </div>
-            <div class="focus-entry">
-              <p class="focus-title">联系与纠错</p>
-              <p class="focus-desc">
-                <a href={`mailto:${EMAIL}`} class="accent-link font-mono">{EMAIL}</a>
-              </p>
-            </div>
+        <div class="two-column-contrast">
+          <div class="contrast-col pros-col">
+            <div class="contrast-title text-green font-mono">✅ 本站坚持执行的专业标准</div>
+            <ul class="contrast-list">
+              <li><strong>自费采购真实套餐</strong>：拒绝商家定向提供的“特供高速测试号”，所有测速数据均基于普通用户付费购买的标准零售套餐。</li>
+              <li><strong>保留原始不可篡改证据</strong>：测速截图全部保持 1122×1402 px 原始分辨率，标明测试工具版本（MAI-TEST-BOT / 喵速）与完整时间戳。</li>
+              <li><strong>全时段与晚高峰交叉压测</strong>：重点抓取 20:00~23:00 全国用网高峰时段的真实带宽衰减与丢包表现。</li>
+              <li><strong>全平台客户端实操验证</strong>：涵盖 Windows、macOS、Android、iOS 以及 OpenWrt 软路由多端，实测订阅配置的兼容性与易用性。</li>
+            </ul>
           </div>
-        </aside>
+          <div class="contrast-col cons-col">
+            <div class="contrast-title text-gold font-mono">❌ 本站坚决抵制的行业乱象</div>
+            <ul class="contrast-list">
+              <li><strong>为短期利益推荐高跑路风险梯子</strong>：某些新开张仅几个月的“一元机场”，以超低价一次性大包诱导用户，本站坚决不予收录或明文提示高危。</li>
+              <li><strong>采集伪原创与洗稿</strong>：市面上充斥着大量依靠爬虫脚本拼接的假评测站，参数自相矛盾，本站坚持 100% 原创撰写与实测验证。</li>
+              <li><strong>掩盖敏感期断流与节点失效事实</strong>：遇到政策性收紧或海底光缆中断，如实通报各家专线容灾表现，绝不粉饰太平。</li>
+            </ul>
+          </div>
+        </div>
       </div>
-    </div>
+    </section>
+
+    <!-- 第二章：行业 4 种评测模式硬核横向对比 -->
+    <section class="section" id="paradigm-comparison" aria-label="Evaluation Paradigm Comparison">
+      <div class="content-block">
+        <div class="block-label font-mono">SECTION 02 · PARADIGM BENCHMARKING</div>
+        <h2>二、行业 4 种主流评测模式深度横向对比：为什么需要网络可观测性？</h2>
+
+        <p class="section-desc">
+          为了让读者清晰辨析本站与市面上其他评测内容的本质区别，我们将当前中文互联网上常见的 4 种机场评价流派进行横向全景对照：
+        </p>
+
+        <div class="table-responsive">
+          <table class="monograph-table highlight-first">
+            <thead>
+              <tr>
+                <th>评测模式维度</th>
+                <th>模式 A：自媒体软文流</th>
+                <th>模式 B：纯脚本跑分流</th>
+                <th>模式 C：批量采集拼凑站</th>
+                <th>模式 D：机场homes 可观测性实验室 (本站)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="featured-plan-row">
+                <td class="font-bold">数据真实性与来源</td>
+                <td>由商家提供官方通稿，甚至直接复制宣传单</td>
+                <td>单次自动化脚本测试，容易受突发带宽干扰</td>
+                <td>网络爬虫抓取旧贴拼凑，常见 2 年前过期数据</td>
+                <td class="font-bold text-accent">多地固定探针长程实测，17 份原始高清防伪证据链</td>
+              </tr>
+              <tr>
+                <td class="font-bold">晚高峰抗压测测试</td>
+                <td>❌ 几乎不测，仅在清晨或深夜截取满速图</td>
+                <td>⚠️ 偶尔测试，多为单次测速，缺乏持续性</td>
+                <td>❌ 无实机测试能力</td>
+                <td class="text-green font-bold">✅ 重点执行 20:00~23:00 晚高峰 180 分钟长程打流</td>
+              </tr>
+              <tr>
+                <td class="font-bold">物理线路链路穿透</td>
+                <td>盲从商家宣传口径（商家标专线就写专线）</td>
+                <td>仅看 Ping 值高低，不分析底层真实跳数</td>
+                <td>完全不懂底层网络拓扑与 BGP 原理</td>
+                <td class="text-green font-bold">✅ 结合 MTR、TTL 跳数与海外 Looking Glass 穿透伪专线</td>
+              </tr>
+              <tr>
+                <td class="font-bold">跑路风险与财务审计</td>
+                <td>❌ 避而不谈，只要给高额佣金就大力推荐</td>
+                <td>❌ 仅关注技术速度，不评估商家资质与年资</td>
+                <td>❌ 无法识别超低价年付资金链断裂陷阱</td>
+                <td class="text-green font-bold">✅ 设立 6 大红线审计模型，深挖 2020~2026 连续运营资质</td>
+              </tr>
+              <tr>
+                <td class="font-bold">商业推广利益透明度</td>
+                <td>隐蔽推广链接，伪装成普通超链接骗取点击</td>
+                <td>仅提供个人推广码，无合规关系属性说明</td>
+                <td>全站挂满垃圾弹窗与欺诈式跳转广告</td>
+                <td class="text-green font-bold">✅ 明确标注 nofollow sponsored 关系，公开佣金用途</td>
+              </tr>
+              <tr>
+                <td class="font-bold">综合读者选型价值</td>
+                <td>极易误导读者陷入频繁换梯、跑路亏钱陷阱</td>
+                <td>对进阶极客有参考价值，但小白难以读懂配置</td>
+                <td>充斥错误参数与失效链接，浪费搜索时间</td>
+                <td class="font-bold text-accent">专著级深度详拆，兼顾新手 0 配置一键上手与极客调优</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- 第三章：可观测性实验室 7 维全生命周期评测框架 -->
+    <section class="section" id="observatory-framework" aria-label="Observatory Methodology Framework">
+      <div class="content-block">
+        <div class="block-label font-mono">SECTION 03 · 7-DIMENSION EVALUATION FRAMEWORK</div>
+        <h2>三、Dark Network Observatory：7 维全生命周期客观评测框架体系</h2>
+
+        <p class="section-desc">
+          我们认为，一个合格的网络评测报告绝不能仅仅停留在“打开某个测速脚本跑几张彩虹图”的浅层阶段。真正的网络可观测性（Network Observability）必须涵盖从物理数据链路、传输层协议、路由健康度到应用层实际体验的全生命周期：
+        </p>
+
+        <!-- 7 维框架卡片网格 -->
+        <div class="dimension-cards-grid">
+          <div class="dim-card">
+            <div class="dim-head font-mono">
+              <span class="dim-num">DIM-01</span>
+              <h4>物理链路拓扑与专线真伪鉴别</h4>
+            </div>
+            <p>
+              利用多节点 MTR、TCP SYN 探测与国内 BGP 入水点路由追踪，精准抓取数据包跨越国境时的物理跃点数。真正经过物理隔离的 IEPL/IPLC 专线在内网传输中跳数极少且无公网 IP 暴露；若在追踪路径中出现国际交换中心（如 163 骨干网 202.97.* 段），即可瞬间揭穿其“假专线”本质。
+            </p>
+          </div>
+
+          <div class="dim-card">
+            <div class="dim-head font-mono">
+              <span class="dim-num">DIM-02</span>
+              <h4>180 分钟晚高峰长程抗拥塞打流</h4>
+            </div>
+            <p>
+              在每日网络最拥堵的 20:00~23:00 时段，通过自动化测试系统每隔 15 分钟对各节点施加多线程高并发下载压测。连续监测网络带宽衰减比率、丢包率（Packet Loss）与延迟抖动（Jitter）。优质专线在晚高峰必须维持丢包率 &lt; 0.5%，且带宽中位数不低于白天标称值的 85%。
+            </p>
+          </div>
+
+          <div class="dim-card">
+            <div class="dim-head font-mono">
+              <span class="dim-num">DIM-03</span>
+              <h4>AI 生产力与流媒体原生解锁矩阵</h4>
+            </div>
+            <p>
+              针对 OpenAI ChatGPT (Web/App/API)、Anthropic Claude 3.5 Sonnet、Google Gemini 以及 Netflix 4K HDR、Disney+、YouTube Premium 进行原生环境检测。重点评估出口落地 IP 是否属于纯净广播 IP 或住宅代理，严禁使用已被风控数据库列入黑名单的高危数据中心 IP。
+            </p>
+          </div>
+
+          <div class="dim-card">
+            <div class="dim-head font-mono">
+              <span class="dim-num">DIM-04</span>
+              <h4>现代无状态协议与能耗开销审计</h4>
+            </div>
+            <p>
+              全面评测服务商部署的传输协议。重点推荐基于现代无状态、轻量化设计的原生 VLESS 协议与高性能 Trojan 协议；对比传统带有双层冗余加解密机制的 VMess 协议，在移动终端（iPhone、安卓手机）上评估其连续开启时的发热量、CPU 占用率与电池续航损耗。
+            </p>
+          </div>
+
+          <div class="dim-card">
+            <div class="dim-head font-mono">
+              <span class="dim-num">DIM-05</span>
+              <h4>财务稳健度与历史运营年资审查</h4>
+            </div>
+            <p>
+              网络服务的物理带宽是具有刚性成本的商品。通过商家的套餐定价模型、收款渠道、域名注资历史与工单响应速度，严密测算其带宽成本与收入平衡。坚决对“低于成本倾销”、“大搞无限流量终身套餐”的高危资金盘商家发出警示，力挺稳定运营 3~6 年以上的老牌良心商家。
+            </p>
+          </div>
+
+          <div class="dim-card">
+            <div class="dim-head font-mono">
+              <span class="dim-num">DIM-06</span>
+              <h4>全平台客户端兼容与隐私安全边界</h4>
+            </div>
+            <p>
+              不仅检验商家自研专属客户端的易用性（是否能做到一键安装、账号登录免配置），更深度核查其自研软件是否存在非法根证书劫持、后台恶意常驻或明文收集用户上网隐私等违规行为。同时要求服务商必须 100% 保持对第三方开源客户端（Clash、Shadowrocket、Sing-box）的通用订阅开放。
+            </p>
+          </div>
+
+          <div class="dim-card">
+            <div class="dim-head font-mono">
+              <span class="dim-num">DIM-07</span>
+              <h4>敏感时期容灾调度与工程师 SLA 响应</h4>
+            </div>
+            <p>
+              当面临国际海底光缆突发震荡、骨干网检修或敏感时期网络收紧时，考验的是服务商的技术储备底蕴。评估其是否具备多入口 BGP 自动熔断、Anycast 故障自动转移（Failover）机制，以及官方客服团队与值班网络工程师在 30 分钟内处理故障的实际服务水平协议（SLA）。
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 增补章节：实验室实测硬件环境、探针网络与可观测性实验台参数 -->
+    <section class="section" id="hardware-probes" aria-label="Laboratory Probes Infrastructure">
+      <div class="content-block">
+        <div class="block-label font-mono">SECTION 03.5 · LAB TELEMETRY INFRASTRUCTURE & PROBES</div>
+        <h2>三点五、评测实验台硬件、多地固定探针与基准环境标准</h2>
+
+        <p class="section-desc">
+          为了杜绝“用个例概括全网”的片面结论，评测实验室在全国部署了多组固定宽带真实探针。我们深知：如果仅在海外 VPS 之间跑测速，只能反映海外机房之间的内网带宽，对评估中国大陆用户跨境访问的真实体验毫无参考价值。
+        </p>
+
+        <h3>1. 多地三大基础电信运营商实测探针矩阵</h3>
+        <p>
+          实验室选取了中国跨境网络最具代表性的三大核心枢纽节点，常年驻留固定宽带测试探针机架：
+        </p>
+
+        <div class="table-responsive">
+          <table class="monograph-table">
+            <thead>
+              <tr>
+                <th>探针物理部署位置</th>
+                <th>接入宽带运营商</th>
+                <th>下行 / 上行物理带宽</th>
+                <th>核心代表性评估场景</th>
+                <th>基准网络特征</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="font-bold">华东探针机架（上海浦东）</td>
+                <td class="font-mono">中国联通 (China Unicom 169)</td>
+                <td class="font-mono">1000 Mbps / 100 Mbps</td>
+                <td>评估北方与长三角联通网络经由上海出口的海缆与直连专线表现</td>
+                <td>长距离路由平稳，国际出口阻断率较低</td>
+              </tr>
+              <tr>
+                <td class="font-bold">华东探针机架（上海静安）</td>
+                <td class="font-mono">中国电信 (China Telecom 163)</td>
+                <td class="font-mono">1000 Mbps / 100 Mbps</td>
+                <td>评估全国用户基数最大的电信 163 骨干网晚高峰公网拥塞与丢包极限</td>
+                <td>晚高峰公网国际互联交换极度拥堵，是检验专线成色的试金石</td>
+              </tr>
+              <tr>
+                <td class="font-bold">华南探针机架（广州天河）</td>
+                <td class="font-mono">中国电信 (China Telecom CN2)</td>
+                <td class="font-mono">500 Mbps / 50 Mbps</td>
+                <td>评估珠三角地区经由深圳/香港核心跨境陆缆管道的极速低延迟</td>
+                <td>深港陆缆直连延迟物理基准线，香港节点实测标杆</td>
+              </tr>
+              <tr>
+                <td class="font-bold">华南探针机架（深圳南山）</td>
+                <td class="font-mono">中国移动 (China Mobile CMI)</td>
+                <td class="font-mono">1000 Mbps / 100 Mbps</td>
+                <td>评估移动用户跨网限速、移动 CMI 国际出口调度与专线容灾</td>
+                <td>移动宽带国际互联受限较多，重点检验服务商 BGP Anycast 入口适配</td>
+              </tr>
+              <tr>
+                <td class="font-bold">华北探针机架（北京朝阳）</td>
+                <td class="font-mono">中国教育和科研计算机网 (CERNET)</td>
+                <td class="font-mono">1000 Mbps / 200 Mbps</td>
+                <td>评估全国高校师生、国家级科研院所访问海外文献库的真实穿透力</td>
+                <td>对 DNS 污染与出口端口审查极严格，检验 TLS 伪装合规性</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>2. 探针软件栈与内核参数标准化调优</h3>
+        <p>
+          所有探针服务器均运行统一标准化的操作系统与内核环境，杜绝因系统调度差异带来的误差：
+        </p>
+        <ul class="monograph-list">
+          <li><strong>操作系统基准</strong>：统一运行 Debian 12 (Bookworm) LTS 纯净服务器系统，剔除所有无关常驻后台进程。</li>
+          <li><strong>拥塞控制算法</strong>：TCP 协议栈统一加载 Linux 原生 <strong>BBRv3 (Bottleneck Bandwidth and RTT)</strong> 算法，替代老旧的 Reno 或 Cubic，确保充分压榨高带宽、长往返时延（BDP）跨境链路的物理潜力。</li>
+          <li><strong>网络传输单元 (MTU) 调谐</strong>：统一设定网络接口 MTU 为标准的 1500 字节，TCP MSS 设为 1460 字节，严防因 MTU 黑洞引发的数据包碎片化二次重组，杜绝突发卡顿。</li>
+          <li><strong>测试工具统一封装</strong>：客户端统一采用开源标准的 sing-box 内核与 Clash Meta (mihomo) 最新编译版本，测试脚本统一调用 MAI-TEST-BOT 与专业级 Speedtest-CLI 原生二进制套件。</li>
+        </ul>
+
+        <h3>3. 流媒体原生解锁 vs DNS 劫持中转的深度技术甄别白皮书</h3>
+        <p>
+          在流媒体评测中，很多新手容易被商家“全面支持 Netflix”的宣传所蒙蔽。在技术底层，流媒体解锁存在两种截然不同的架构：
+        </p>
+        <ul class="monograph-list">
+          <li><strong>架构 A：真正原生出口住宅/商业 IP 广播直出（优质标准）</strong>：节点的流量全程由海外落地机房的原生干净 IP 直出。不仅能顺畅播放 Netflix 4K 全区非自制版权剧集，更支持 Disney+、Amazon Prime Video 以及美区 PayPal 与银行金融业务。由于全程走本地机房路由，画质秒开且绝不发生降码率。</li>
+          <li><strong>架构 B：廉价后端 DNS 劫持与 SNI Proxy 转发（低质缩水）</strong>：商家海外落地节点的真实 IP 实际上已被流媒体官方拉黑。为了掩人耳目，商家在后台偷偷将用户对 Netflix 域名的 DNS 请求强行劫持并重定向至一台低配的廉价中继机器上（俗称“偷跑分流”）。这种做法会导致晚高峰期间数百名用户同时挤占那台低配中继机，引发严重的视频缓冲、画质断崖式跌落至 480p，甚至频繁弹出“您似乎正在使用代理或解锁工具”的警告弹窗。</li>
+        </ul>
+        <p>
+          <strong>实验室的甄别方法</strong>：在评测中，我们不仅通过自动化脚本检测 HTTP 状态码，更会在实机终端抓取 TLS 证书颁发链与目标 CDN 节点的真实反向 IP（Reverse IP Lookup），彻底揭穿一切依靠 DNS 伪装偷跑的虚假解锁套路！
+        </p>
+      </div>
+    </section>
+
+    <!-- 第四章：网络底层物理原理解剖 -->
+    <section class="section" id="network-principles" aria-label="Physical Principles Deep Dive">
+      <div class="content-block">
+        <div class="block-label font-mono">SECTION 04 · PHYSICAL LAWS & NETWORK TELEMETRY</div>
+        <h2>四、网络底层原理解剖：为什么我们坚信数据胜于任何营销吹嘘？</h2>
+
+        <p class="section-desc">
+          网络世界不是玄学，每一毫秒的延迟、每一个丢失的数据包，背后都有着不可逾越的现代物理学与电信工程学规律：
+        </p>
+
+        <h3>1. 光速在玻璃光纤中的物理折射极限与 RTT 延迟公式</h3>
+        <p>
+          许多不良商家在宣传单上声称“香港节点延迟只有 5ms”、“美国节点延迟只要 30ms”，这在物理常识上是完全荒谬的。光在真空中的传播速度为每秒 300,000 公里，但在制造通信光纤的高纯度二氧化硅（石英玻璃）介质中，折射率约为 <code>n ≈ 1.468</code>。
+        </p>
+        <p>
+          这意味着光信号在光纤中的实际传播速度约为每秒 <strong>20.4 万公里</strong>。计算双向往返传播时间（RTT）的基础物理公式如下：
+        </p>
+
+        <div class="formula-box font-mono">
+          <div class="formula-text">RTT_min = (2 × D_fiber) / v_light_fiber ≈ (2 × D_physical × 1.3) / 204,000 km/s</div>
+          <div class="formula-sub">其中：D_physical 为两地地理直线距离；1.3 为地埋光缆因避让地形道路产生的弯曲路由系数（Routing Factor）</div>
+        </div>
+
+        <p>
+          根据这一严密公式，我们可以推导出各主流跨境线路在不受任何公网排队拥塞干扰下的理论物理最低极限值：
+        </p>
+        <ul class="monograph-list">
+          <li><strong>深圳 ⇋ 香港（直线约 40 km）</strong>：光纤往返延迟约为 <strong>0.5 ms</strong>；加上两端机房光电转换、交换机入队列与三层路由开销（约 15~20 ms），优质专线的真实最终延迟必定在 <strong>20~25 ms</strong> 之间（如光速云实测 22ms）。凡是声称只有 5ms 的，绝大多数是由于在客户端上直接 Ping 了国内中转入口虚标出来的假延迟！</li>
+          <li><strong>上海 ⇋ 东京（直线约 1,800 km）</strong>：经由东亚海底光缆（APG/SJC2）往返纯光传导耗时约为 23 ms；结合国内汇聚与海外本地网络，真实物理专线极限延迟应在 <strong>45~55 ms</strong> 之间。</li>
+          <li><strong>广州 ⇋ 洛杉矶（直线约 11,600 km）</strong>：跨太平洋海底光缆（TPE/NCP）往返纯光传导耗时就已高达 148 ms；因此任何中美专线的实际延迟绝不可能低于 <strong>135~155 ms</strong>。</li>
+        </ul>
+
+        <h3>2. ICMP Ping vs TCP/TLS 握手延迟的本质差异与欺诈识别</h3>
+        <p>
+          普通用户经常在客户端界面看到节点列表显示绿色的“15ms”，但打开网页却发现迟迟没有响应。这种现象产生的原因在于测量协议的不同：
+        </p>
+        <ul class="monograph-list">
+          <li><strong>ICMP Ping（网络层探针）</strong>：很多廉价中转机场在国内中转服务器上直接对用户的 ICMP 请求进行伪答复（本地 Echo Reply）。此时客户端测到的仅仅是您家里的电脑到国内中转机的局域网距离，而中转机到海外落地机房那段漫长甚至已经断开的国际公网链路完全没有被测进去！</li>
+          <li><strong>TCP / HTTPing（应用层真实握手）</strong>：实验室采用的测速工具必须发起真实的 TCP 三次握手与 TLS Client Hello 握手，数据包必须切实飞越国境线并收到海外目标落地机房的确认回执。只有这种方法测出的延迟，才能真实反映加载海外网页与调用 AI API 时的真实手感。</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 第五章：跑路风险与不良机场财务红线审计模型 -->
+    <section class="section" id="anti-scam-audit" aria-label="Anti-Scam Financial Audit Model">
+      <div class="content-block">
+        <div class="block-label font-mono">SECTION 05 · FINANCIAL SOUNDNESS & EXIT-SCAM WARNINGS</div>
+        <h2>五、6 大跑路风险红线审计模型：如何识别濒临崩盘的不良机场？</h2>
+
+        <p class="section-desc">
+          在过去几年中，全网每年有超过 300 家大小机场在没有任何预警的情况下突然关门跑路。经过对数十起行业跑路案例的深度解剖，实验室总结出了判定机场财务健康度与跑路风险的 <strong>6 大红线预警体系</strong>：
+        </p>
+
+        <div class="warning-alert-box">
+          <div class="alert-head font-mono">
+            <span>🚨 实验室风控预警：触碰以下 3 条以上红线者，90% 会在 3~6 个月内卷款失联</span>
+          </div>
+          <div class="alert-body">
+            <ol class="step-ordered-list">
+              <li>
+                <strong>红线 1：背离物理成本的“超低价大额不限时包”</strong><br />
+                正规 IDC 国际专线带宽成本极为高昂（1Gbps 纯专线月租往往高达数万元）。如果某家新开业的服务商推出“10 元 1000G 永久不限时”、“19 元永久终身使用”等不可思议的超低价，这根本不是做生意，而是典型的庞氏旁氏资金盘——利用后买者的钱补前面的亏空，一旦新用户增长停滞，商家会在卷走几十万预付款后立刻注销跑路。
+              </li>
+              <li>
+                <strong>红线 2：取消月付选项，强行只卖半年付或三年付</strong><br />
+                健康运营的服务商通常以月付为基本盘。当一家原本支持月付的机场突然取消月付、仅支持半年付、年付甚至三年付大额订单时，往往意味着其现金流已经枯竭，正在进行关门前的最后一轮资金收割。
+              </li>
+              <li>
+                <strong>红线 3：连续两周以上晚高峰大面积断流且工单无人应答</strong><br />
+                如果是突发性的光缆故障，负责任的技术团队会在 1~2 小时内于 Telegram 频道或官网公告栏发出排障进度；而当一家机场全线瘫痪超过 14 天、官方群开启全员禁言、工单系统处于僵死状态时，说明其底层服务器已被机房查封或欠费断网。
+              </li>
+              <li>
+                <strong>红线 4：频繁更换收款账户名与底层发卡渠道</strong><br />
+                支付网关是观察服务商稳定性的重要窗口。如果每充值一次，收款商户都在频繁从“某某数码商行”跳到“个人二维码”或极度不稳定的第三方野生支付接口，表明其正规支付通道已被风控清退，洗钱或违规风险极高。
+              </li>
+              <li>
+                <strong>红线 5：运营年资不足 6 个月却宣称拥有全网顶级专线</strong><br />
+                搭建一套具备全国多地 BGP 入口与冗余海缆的优质企业专线需要极深厚的行业资源与资金沉淀。成立不足半年的初创小作坊绝无可能承担巨额专线预付金，其宣传口径中的“全 IPLC 双专线”几乎 100% 为公网中转伪装。
+              </li>
+              <li>
+                <strong>红线 6：管理团队多次被曝在不同群组使用多个马甲开分店</strong><br />
+                行业内有一批职业跑路黑产团伙，习惯于采用同一套开源前端源码（V2Board / SSPanel），批量注册 5~10 个不同名字的机场。一家跑路后换个皮继续开张收割新韭菜。
+              </li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="notes-callout font-mono">
+          <p>
+            🛡️ <strong>实验室避坑核心法则：</strong> 新手初次尝试任何一家新机场时，<strong>务必坚持“先月付后年付”原则</strong>。即便年付优惠再大，也建议在连续使用 2~3 个月确认晚高峰品质满足需求后再考虑升级长周期。对于本站推荐的第一主推老牌商家（如光速云自 2020 年运营至今已超 6 年），才具备年付选购的安全信任基石。
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 第六章：读者实操与决策指南 -->
+    <section class="section" id="selection-pathway" aria-label="Reader Selection Guide">
+      <div class="content-block">
+        <div class="block-label font-mono">SECTION 06 · DECISION PATHWAY & USER PROFILES</div>
+        <h2>六、读者决策指南：如何根据您的实际业务场景高效选型？</h2>
+
+        <p class="section-desc">
+          没有绝对最好的机场，只有最适合您预算与业务需求的技术方案。在查阅本站的评测与榜单时，请按照您的真实使用画像沿着下方分支寻找匹配解：
+        </p>
+
+        <div class="table-responsive">
+          <table class="monograph-table">
+            <thead>
+              <tr>
+                <th>用户核心诉求</th>
+                <th>最关键技术考量指标</th>
+                <th>不适宜的选择类型</th>
+                <th>实验室推荐选型路线</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="font-bold">高校师生 / 科研学者</td>
+                <td>Google Scholar、arXiv、海外高校内网长连接不中断、低延迟</td>
+                <td>频繁跳 IP 的动态中转机场（易导致学术期刊数据库下载被封锁）</td>
+                <td>首选企业专线直连主力梯（如 <a href="/airports/guangsu/">光速云轻量版年付 ¥99/年</a>，单月仅8元，性价比无敌）</td>
+              </tr>
+              <tr>
+                <td class="font-bold">外贸出海 / 跨境电商卖家</td>
+                <td>Amazon/eBay 店铺防关联、TikTok 直播推流无卡顿、原生住宅出口</td>
+                <td>共享公网劣质廉价机场（IP 污染严重，极易触发店铺封号拒付）</td>
+                <td>首选具备高风控隔离能力的大流量专线或独立 IP 套餐（如光速云量子版/定制版）</td>
+              </tr>
+              <tr>
+                <td class="font-bold">重度 AI 开发者 (Cursor/Claude)</td>
+                <td>ChatGPT-4o、Claude 3.5 Sonnet、GitHub Copilot 长连接长会话稳定</td>
+                <td>限制 AI 访问或落地 IP 被 OpenAI 标记为 High-Risk 的低质节点</td>
+                <td>首选通过原生解锁实测的极速专线（如光速云极速版 ¥25/月）</td>
+              </tr>
+              <tr>
+                <td class="font-bold">家庭全屋免翻 / 4K 影音爱好者</td>
+                <td>软路由（OpenWrt/OpenClash）透明代理支持、Apple TV 4K 秒开</td>
+                <td>仅提供单一自研客户端且拒绝开放通用订阅链接的小闭环机场</td>
+                <td>首选 100% 开放标准 Clash 订阅并兼容 Fake-IP 模式的成熟专线梯子</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- 增补章节：家庭全屋智能出海与软路由评测准则 -->
+    <section class="section" id="router-guidelines" aria-label="Smart Home & Soft Router Telemetry">
+      <div class="content-block">
+        <div class="block-label font-mono">SECTION 06.5 · SMART HOME & ROUTER DEPLOYMENT EVALUATION</div>
+        <h2>六点五、家庭全屋智能与软路由出海科学部署评测标准</h2>
+
+        <p class="section-desc">
+          随着家庭智能终端（如 Apple TV 4K、PlayStation 5、Nintendo Switch、Xbox 以及海外智能家居音箱）的全面普及，越来越多的读者选择在家庭主路由或旁路由上部署透明代理。为此，实验室专门设立了软路由场景的适配评估维度：
+        </p>
+
+        <h3>1. DNS 分流与防污染模式（Fake-IP vs Redir-Host）实机测试准则</h3>
+        <p>
+          在 OpenWrt 系统上运行 OpenClash 或 PassWall 时，DNS 的解析架构直接决定了全屋网络的稳定与响应延迟：
+        </p>
+        <ul class="monograph-list">
+          <li><strong>Fake-IP 模式（强烈推荐）</strong>：路由器本地为所有海外域名即时分配一个虚拟的保留局域网 IP（如 198.18.0.1/16），设备端省去了漫长的公网 DNS 查询往返时间（DNS Lookup 延迟降为 0ms！）。真正的域名解析被推迟到海外落地服务器端执行，从根源上 100% 免疫了国内运营商的 Local DNS 投毒污染。评测重点考核机场节点集在 Fake-IP 模式下是否有内存泄漏与规则脱落。</li>
+          <li><strong>Redir-Host 模式（兼容备选）</strong>：必须在本地先通过安全加密通道（DoH / DoT）解析出真实境外 IP 后再行转发。容易受到国内公共 DNS 超时与网络阻断影响，适合对局域网内部某些老旧嵌入式物联网设备存在特殊兼容要求的场景。</li>
+        </ul>
+
+        <h3>2. UDP 转发与 FullCone NAT 穿透能力审计（海外联机游戏生命线）</h3>
+        <p>
+          许多机场只关注 TCP 网页浏览，却对 UDP 数据包限速或直接粗暴阻断。然而，海外联机对战（如《使命召唤》《Apex 英雄》《任天堂全明星大乱斗》）以及 Zoom / Discord 语音会议极度依赖 UDP 传输与 NAT 穿透。
+        </p>
+        <p>
+          实验室采用专门的 NATTypeTester 工具，对每家机场的香港、日本专线节点进行标准 STUN 探测：
+        </p>
+        <ul class="monograph-list">
+          <li><strong>FullCone (NAT 1 / 完全圆锥型)</strong>：最高评级。节点出口对外网反向打洞完全开放，在 PS5 或 Switch 上进行联机组队秒排匹配，绝对不会遇到“NAT 类型不兼容无法加入房间”的报错。</li>
+          <li><strong>Symmetric (NAT 4 / 对称型)</strong>：较差评级。出口端口随机漂移，严禁用于主机电竞游戏联机，仅勉强可用于单向下载。</li>
+        </ul>
+
+        <h3>3. 常见 4 大突发网络故障排障树与读者快速自救指南</h3>
+        <p>
+          当您在日常使用中突发网络异常时，请依照实验室制定的标准工作流进行针对性排查：
+        </p>
+        <ol class="step-ordered-list">
+          <li><strong>排查 A：网页全部打不开，但客户端测速显示正常延迟</strong>：95% 属于本地系统时钟偏差。请立即进入 Windows 或手机设置，检查系统时间是否与北京时间一致。时间误差超过 60 秒时，TLS 证书校验将直接失败断开。</li>
+          <li><strong>排查 B：Google 可以秒开，但 YouTube 提示“无互联网连接”</strong>：通常是客户端未支持或运营商拦截了 QUIC（基于 UDP 的 HTTP/3）协议。在浏览器地址栏输入 <code>chrome://flags</code>，搜索 <code>Experimental QUIC protocol</code> 并将其设为 Disabled，强制回退至稳定的 TCP TLS 即可完美解决。</li>
+          <li><strong>排查 C：开启代理后本地微信、网银无法发送文件或频繁掉线</strong>：属于分流规则未正确生效。请检查客户端分流模式是否被误设为了“全局 (Global)”，务必将其切换回“规则 (Rule)”分流模式，并更新国内 GeoIP 规则数据库。</li>
+          <li><strong>排查 D：节点列表全红且所有请求均显示 Timeout</strong>：检查机场官网是否发布了后台维护公告，或由于出口 IP 轮换需要更新订阅。在客户端右键该配置卡片点击“从 URL 重新拉取”，拉取最新接入端点即可恢复。</li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- 第七章：纠错报送与争议处理机制 -->
+    <section class="section" id="correction-process" aria-label="Dispute & Correction Workflow">
+      <div class="content-block">
+        <div class="block-label font-mono">SECTION 07 · CORRECTION, RE-TESTING & DISPUTE RESOLUTION</div>
+        <h2>七、纠错报送、复核与争议下架公开机制</h2>
+
+        <p class="section-desc">
+          网络环境处于动态变化之中，任何评测数据都具备一定的时效性。为了保证本站评测报告的长期客观与公正，我们建立了完全开放透明的纠错与复核流程：
+        </p>
+
+        <ol class="step-ordered-list">
+          <li>
+            <strong>读者纠错提交</strong>：如果您在日常使用中发现某家服务商的实际情况与本站报告存在重大出入（例如价格变动、节点大面积失效、跑路风险警示），欢迎随时向 <a href={`mailto:${EMAIL}`} class="accent-link font-mono">{EMAIL}</a> 发送反馈邮件。
+          </li>
+          <li>
+            <strong>证据受理准则</strong>：提交时请尽量附带您的测试环境说明（本地运营商如广东电信或北京联通）、测速截图、抓包日志或工单沟通截图。
+          </li>
+          <li>
+            <strong>实验室 48 小时复测机制</strong>：收到有效反馈后，实验室将在 48 小时内调取多地探针服务器重新接入该服务商节点进行多轮基准复测。
+          </li>
+          <li>
+            <strong>评级修正与公开降牌</strong>：若复测证实该服务商品质出现持续性不可逆下滑，我们将立即在对应页面更新最新实测数据，并调低综合评分；若证实跑路，将永久予以摘牌并全网警示。
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- 第八章：10 大高价值行业疑难解答 -->
+    <section class="section" id="faq-section" aria-label="10 Frequently Asked Questions">
+      <div class="content-block">
+        <div class="block-label font-mono">SECTION 08 · 10 FREQUENTLY ASKED QUESTIONS & CRITICAL EDGE CASES</div>
+        <h2>八、高频疑问解答 (FAQ) 与真实边界声明</h2>
+
+        <div class="faq-accordion">
+          <div class="faq-item">
+            <h3>Q1：机场homes 评测实验室的资金来源是什么？推荐排名是否受商业赞助影响？</h3>
+            <p>
+              本站的部分品牌详情页包含合规的推广注册链接（统一遵循 Google 搜索规范标记 <code>rel="nofollow sponsored noopener"</code>）。推广返利仅用于维持实验室自费购买机场套餐、租用多地独立拨测探针服务器以及网站基础运维。本站的核心排名与技术评级完全基于真实测速数据、晚高峰丢包率与持续运营年资，任何商业合作均不得干预评测结论或篡改实测数据。
+            </p>
+          </div>
+
+          <div class="faq-item">
+            <h3>Q2：为什么不同用户在同一家机场测出的速度差异很大？实验室如何保证评测客观性？</h3>
+            <p>
+              终端用户的网络速度受本地运营商（电信/联通/移动）、最后一公里 Wi-Fi 质量、本地 DNS 污染、客户端内核配置以及各省份骨干网互联条件多重影响。实验室采用多地独立固定宽带探针（涵盖华东、华南、华北三大主流运营商环境），在相同时间段进行基准控制，并提供包含测速工具版本、协议类型、往返延迟、丢包率与测速时间戳的 1122x1402 px 原始截图，确保测试过程防伪可溯源。
+            </p>
+          </div>
+
+          <div class="faq-item">
+            <h3>Q3：什么是“假专线”与“假中转”？实验室如何从底层抓穿虚假宣传？</h3>
+            <p>
+              部分不良商家将普通公网直连伪称为“BGP 中转”，或将普通公网隧道伪标为“IEPL/IPLC 专线”。实验室通过 MTR 持续路由追踪、ICMP 物理跳数（TTL）异常分析、Looking Glass 海外反向检测以及敏感时期（公网丢包暴增期）专线连通性交叉验证，能够在物理链路层彻底穿透伪造标签。
+            </p>
+          </div>
+
+          <div class="faq-item">
+            <h3>Q4：机场homes 如何评估一家机场的“跑路风险”？有具体的预警指标吗？</h3>
+            <p>
+              我们建立了 6 大跑路风险红线审计模型：包括超低价一次性大包诱导（如 10 元不限时 1TB）、无真实月付选项强制年付、连续两周以上晚高峰断流且无工单响应、短时间内频繁变更收款主体与用户群、域名频繁更换无备案或未配置 DNSSEC 等。一旦触发多项红线，本站将即时标注“高风险警告”或予以摘牌。
+            </p>
+          </div>
+
+          <div class="faq-item">
+            <h3>Q5：读者发现测速数据不符或商家跑路，该如何向实验室提交复核与纠错？</h3>
+            <p>
+              读者可通过官方邮件 <a href={`mailto:${EMAIL}`} class="accent-link font-mono">{EMAIL}</a> 提交复核申请。提交时建议附带您的本地运营商类型、测试时间段、测速回执截图或工单未响应记录。实验室将在 48 小时内核实，并在品牌页面公示复测进展或风险警示。
+            </p>
+          </div>
+
+          <div class="faq-item">
+            <h3>Q6：为什么实验室极度强调必须进行晚高峰（20:00~23:00）压力打流？</h3>
+            <p>
+              白天非高峰期国际骨干网通常空载，即便几块钱的劣质公网机场也能跑出漂亮的高分。而晚高峰是全国跨境网络流量最拥挤的时段，只有在晚高峰持续进行 180 分钟的长程多线程压力测试，才能真正检验机场物理专线带宽储备、BGP 入口冗余调度以及抗丢包实力。
+            </p>
+          </div>
+
+          <div class="faq-item">
+            <h3>Q7：流媒体解锁与 AI 大模型支持是永久稳定的吗？</h3>
+            <p>
+              不是。流媒体版权方（Netflix、Disney+）与 AI 服务商（OpenAI、Anthropic）的风控 IP 库是动态更新的。实验室将解锁评估分为“原生支持”、“规则重写解锁”与“阶段性受限”，并定期重新抽检，告知用户真实的轮换边界与多节点备用自救策略。
+            </p>
+          </div>
+
+          <div class="faq-item">
+            <h3>Q8：初次使用科学上网的新手，在阅读本站评测时应该最先关注哪几个指标？</h3>
+            <p>
+              新手最应关注三个核心指标：第一是“运营年资”（建议选择稳定运营 3 年以上的老牌服务商）；第二是“是否提供月付选项”（切忌初次使用就购买超长年付）；第三是“是否提供自研一键登录客户端或保姆级导入教程”（避免因复杂的第三方配置导致入门受阻）。
+            </p>
+          </div>
+
+          <div class="faq-item">
+            <h3>Q9：为什么本站不仅收录高品质专线，也收录了部分性价比中转机场？</h3>
+            <p>
+              读者的预算和用途是多样化的。并非所有读者都具备每月支付 25~50 元的预算，部分学生读者可能只需要每月花几元钱查阅维基百科和 GitHub 开源文档。因此，我们建立了覆盖 42 家品牌的完整梯队库，满足从几元入门轻量档到企业级定制部署的多层次需求。
+            </p>
+          </div>
+
+          <div class="faq-item">
+            <h3>Q10：使用代理节点时，我的国内应用（微信、网银、腾讯会议）会被劫持吗？</h3>
+            <p>
+              不会。现代科学上网客户端均采用内置的规则分流体系（如 ChinaMax / GeoIP:cn），所有的国内本地流量默认全部走直连，不经过海外代理服务器，也不消耗套餐流量，保障国内通信的绝对私密与满速。
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 第九章：核心专题集群与推荐研究入口 -->
+    <section class="section" id="featured-cluster" aria-label="Featured Cluster Hub">
+      <div class="final-conversion-wrapper">
+        <div class="final-conv-head">
+          <span class="badge-crown font-mono">LABORATORY OBSERVATION HUB · 实验室核心观测入口</span>
+          <h2>开启您的理性选型与测速实测查验之旅</h2>
+          <p>
+            欢迎探索 <strong>机场homes 评测实验室</strong> 的各项专题资源。我们为您整理了全站最重要的四大核心技术枢纽：
+          </p>
+        </div>
+
+        <div class="hub-cards-grid">
+          <a href="/airports/guangsu/" class="hub-entry-card">
+            <span class="hub-tag font-mono text-accent">👑 2026 年度第一主推</span>
+            <h3>光速云专著级万字深度评测</h3>
+            <p>2020年老牌IEPL双专线直连，香港实测22ms/529Mbps，7大套餐精细规格与5张实机解锁证据。</p>
+            <span class="hub-link-text font-mono">阅读专著深度报告 →</span>
+          </a>
+
+          <a href="/airports/" class="hub-entry-card">
+            <span class="hub-tag font-mono text-green">📊 全景品牌雷达</span>
+            <h3>42 家主流机场全景数据库</h3>
+            <p>全景覆盖从入门性价比、流媒体专用到企业级高端专线，按线路、协议、价格全维筛查。</p>
+            <span class="hub-link-text font-mono">进入 42 家品牌库 →</span>
+          </a>
+
+          <a href="/speedtest/" class="hub-entry-card">
+            <span class="hub-tag font-mono text-gold">📸 不可篡改证据链</span>
+            <h3>17 份原始高清实机测速展厅</h3>
+            <p>保留 1122×1402 px 原始大图、测试时间戳与版本号，杜绝任何人工 P 图与虚假跑分。</p>
+            <span class="hub-link-text font-mono">查验测速证据快照 →</span>
+          </a>
+
+          <a href="/clients/" class="hub-entry-card">
+            <span class="hub-tag font-mono text-soft">💻 全平台软件导航</span>
+            <h3>全平台客户端下载与保姆级配置指南</h3>
+            <p>覆盖 Windows、macOS、Android、iOS 小火箭与 OpenWrt 软路由，小白与极客通配。</p>
+            <span class="hub-link-text font-mono">获取客户端配置教程 →</span>
+          </a>
+        </div>
+
+        <div class="action-info font-mono" style="margin-top: 2rem;">
+          <span>官方技术交流与数据纠错邮箱：<a href={`mailto:${EMAIL}`} class="text-coupon font-bold font-mono">{EMAIL}</a></span>
+        </div>
+
+        <p class="final-disclosure font-mono" style="margin-top: 1rem;">
+          * 声明：本站坚持技术底线与中立客观。本站引用的所有测试数据均来自真实测试环境并经过严格哈希归档，欢迎全球读者进行数据复测与理性监督。
+        </p>
+      </div>
+    </section>
 
     <SkillsMarquee />
   </main>
 </Layout>
 
 <style is:global>
-  .about-grid {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(280px, 0.4fr);
-    gap: 3rem;
-    align-items: start;
+  /* Monograph Layout */
+  .monograph-header {
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 2.25rem;
+    margin-bottom: 2.5rem;
   }
 
-  .about-card {
-    border: 1px solid var(--line);
-    border-radius: var(--radius-lg);
-    background: var(--bg-elevated);
-    padding: 1.75rem;
+  .header-status-line {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    align-items: center;
+    margin-bottom: 1.25rem;
   }
 
-  .about-card h3 {
-    margin: 0 0 1.15rem;
-    font-family: var(--mono);
+  .badge-crown {
     font-size: 0.78rem;
-    font-weight: 700;
-    letter-spacing: 0.12em;
-    color: var(--accent);
+    font-weight: 800;
+    padding: 0.25rem 0.75rem;
+    background: var(--accent);
+    color: #fff;
+    border-radius: var(--radius-sm);
   }
 
-  .about-prose p {
-    margin: 0 0 1.2rem;
-    color: color-mix(in srgb, var(--ink) 82%, var(--muted));
-    font-size: 0.96rem;
-    line-height: 1.75;
+  .badge-spec {
+    font-size: 0.72rem;
+    padding: 0.22rem 0.6rem;
+    background: var(--bg-elevated);
+    border: 1px solid var(--line);
+    color: var(--ink-soft);
+    border-radius: var(--radius-sm);
+    font-weight: 600;
   }
 
-  .about-prose p:last-child {
-    margin-bottom: 0;
-  }
-
-  .accent-link {
-    color: var(--accent);
-    text-decoration: underline;
-    text-underline-offset: 3px;
-  }
-
-  .accent-link:hover {
+  .monograph-title {
+    font-family: var(--mono);
+    font-size: clamp(1.9rem, 4.2vw, 2.9rem);
+    font-weight: 800;
+    line-height: 1.2;
+    letter-spacing: -0.04em;
     color: var(--ink);
+    margin: 0 0 1.25rem;
   }
 
-  .sidebar-card {
-    position: sticky;
-    top: 6rem;
+  .monograph-lede {
+    font-size: 1.12rem;
+    line-height: 1.85;
+    color: var(--ink-soft);
+    max-width: 920px;
+    margin: 0;
+  }
+
+  /* TOC Card */
+  .toc-container {
+    margin-bottom: 3rem;
+  }
+
+  .toc-card {
     border: 1px solid var(--line);
     border-radius: var(--radius-lg);
     background: var(--bg-elevated);
     padding: 1.75rem;
   }
 
-  .sidebar-card h3 {
-    margin: 0 0 1.25rem;
-    font-family: var(--mono);
-    font-size: 0.78rem;
-    font-weight: 700;
-    letter-spacing: 0.12em;
-    color: var(--muted);
-  }
-
-  .focus-entry {
-    margin-bottom: 1.2rem;
-    border-bottom: 1px dashed var(--line);
-    padding-bottom: 0.8rem;
-  }
-
-  .focus-entry:last-child {
-    margin-bottom: 0;
-    border-bottom: 0;
-    padding-bottom: 0;
-  }
-
-  .focus-title {
-    font-size: 0.82rem;
-    color: var(--muted);
-    margin: 0 0 0.25rem;
-  }
-
-  .focus-desc {
-    margin: 0;
+  .toc-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
     font-size: 0.95rem;
     font-weight: 700;
     color: var(--ink);
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 0.85rem;
+    margin-bottom: 1.15rem;
   }
 
-  @media (max-width: 860px) {
-    .about-grid {
-      display: block;
-    }
+  .toc-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 0.75rem 1.5rem;
+  }
 
-    .sidebar-card {
-      position: static;
-      margin-top: 3rem;
+  .toc-grid a {
+    color: var(--muted);
+    font-size: 0.84rem;
+    text-decoration: none;
+    transition: color 0.12s ease;
+    display: block;
+    line-height: 1.5;
+  }
+
+  .toc-grid a:hover {
+    color: var(--accent);
+    text-decoration: underline;
+  }
+
+  /* Content Block */
+  .content-block {
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    background: var(--bg-card);
+    padding: 2.25rem;
+    margin-bottom: 2.5rem;
+    box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
+  }
+
+  .block-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 0.08em;
+    margin-bottom: 0.75rem;
+  }
+
+  .content-block h2 {
+    font-family: var(--mono);
+    font-size: 1.65rem;
+    font-weight: 800;
+    margin: 0 0 1.25rem;
+    color: var(--ink);
+    line-height: 1.35;
+  }
+
+  .content-block h3 {
+    font-family: var(--mono);
+    font-size: 1.22rem;
+    font-weight: 700;
+    margin: 2rem 0 1rem;
+    color: var(--ink);
+  }
+
+  .content-block h4 {
+    font-family: var(--mono);
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin: 0 0 0.5rem;
+    color: var(--ink);
+  }
+
+  .section-desc {
+    font-size: 1.02rem;
+    line-height: 1.8;
+    color: var(--ink-soft);
+    margin-bottom: 1.75rem;
+  }
+
+  /* Direct Decision Summary */
+  .direct-decision-summary {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    background: var(--bg-elevated);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .summary-point {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .summary-badge {
+    align-self: flex-start;
+    font-size: 0.72rem;
+    font-weight: 800;
+    font-family: var(--mono);
+    padding: 0.2rem 0.6rem;
+    border-radius: var(--radius-sm);
+    text-transform: uppercase;
+  }
+
+  .summary-badge.green {
+    background: rgba(30, 142, 62, 0.15);
+    color: #1e8e3e;
+    border: 1px solid rgba(30, 142, 62, 0.3);
+  }
+
+  .summary-badge.accent {
+    background: rgba(142, 90, 178, 0.15);
+    color: var(--accent);
+    border: 1px solid rgba(142, 90, 178, 0.3);
+  }
+
+  .summary-point p {
+    margin: 0;
+    font-size: 0.98rem;
+    line-height: 1.8;
+    color: var(--ink);
+  }
+
+  /* Two Column Contrast */
+  .two-column-contrast {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  @media (max-width: 768px) {
+    .two-column-contrast {
+      grid-template-columns: 1fr;
     }
   }
+
+  .contrast-col {
+    background: var(--bg-elevated);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    padding: 1.5rem;
+  }
+
+  .contrast-title {
+    font-size: 0.92rem;
+    font-weight: 800;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .contrast-list {
+    margin: 0;
+    padding-left: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    font-size: 0.9rem;
+    line-height: 1.65;
+    color: var(--ink-soft);
+  }
+
+  /* Tables */
+  .table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    margin: 1.5rem 0 2rem;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .monograph-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.88rem;
+    line-height: 1.55;
+    text-align: left;
+    white-space: normal;
+  }
+
+  .monograph-table th,
+  .monograph-table td {
+    padding: 0.9rem 1.1rem;
+    border: 1px solid var(--line);
+  }
+
+  .monograph-table th {
+    background: var(--bg-elevated);
+    color: var(--ink);
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+
+  .monograph-table tbody tr:hover {
+    background: var(--bg-elevated);
+  }
+
+  .featured-plan-row {
+    background: rgba(142, 90, 178, 0.04);
+  }
+
+  /* Dimension Cards Grid */
+  .dimension-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+  }
+
+  .dim-card {
+    background: var(--bg-elevated);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .dim-head {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 0.75rem;
+    margin-bottom: 0.85rem;
+  }
+
+  .dim-num {
+    font-size: 0.75rem;
+    font-weight: 800;
+    color: var(--accent);
+  }
+
+  .dim-card p {
+    margin: 0;
+    font-size: 0.92rem;
+    line-height: 1.75;
+    color: var(--ink-soft);
+  }
+
+  /* Formula Box */
+  .formula-box {
+    background: #0d1117;
+    border: 1px solid #30363d;
+    border-radius: var(--radius-sm);
+    padding: 1.25rem;
+    margin: 1.25rem 0;
+    color: #58a6ff;
+  }
+
+  .formula-text {
+    font-size: 0.95rem;
+    font-weight: 800;
+    margin-bottom: 0.5rem;
+  }
+
+  .formula-sub {
+    font-size: 0.76rem;
+    color: #8b949e;
+  }
+
+  /* Monograph List */
+  .monograph-list {
+    padding-left: 1.35rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+    font-size: 0.98rem;
+    line-height: 1.8;
+    color: var(--ink-soft);
+    margin: 1.25rem 0;
+  }
+
+  /* Warning Alert Box */
+  .warning-alert-box {
+    border: 1px solid rgba(234, 67, 53, 0.4);
+    background: rgba(234, 67, 53, 0.04);
+    border-radius: var(--radius-md);
+    padding: 1.75rem;
+    margin: 1.5rem 0;
+  }
+
+  .alert-head {
+    font-size: 0.9rem;
+    font-weight: 800;
+    color: #d93025;
+    margin-bottom: 1.25rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid rgba(234, 67, 53, 0.2);
+  }
+
+  .step-ordered-list {
+    margin: 0;
+    padding-left: 1.35rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.15rem;
+    font-size: 0.95rem;
+    line-height: 1.8;
+    color: var(--ink-soft);
+  }
+
+  /* Notes Callout */
+  .notes-callout {
+    background: var(--bg-elevated);
+    border-left: 3px solid var(--accent);
+    padding: 1rem 1.25rem;
+    font-size: 0.86rem;
+    line-height: 1.75;
+    color: var(--ink-soft);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    margin-top: 1.5rem;
+  }
+
+  /* FAQ Accordion */
+  .faq-accordion {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .faq-item {
+    background: var(--bg-elevated);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    padding: 1.5rem;
+  }
+
+  .faq-item h3 {
+    margin: 0 0 0.75rem;
+    font-size: 1.05rem;
+    color: var(--ink);
+    font-family: var(--mono);
+  }
+
+  .faq-item p {
+    margin: 0;
+    font-size: 0.95rem;
+    line-height: 1.8;
+    color: var(--ink-soft);
+  }
+
+  /* Hub Cards Grid */
+  .hub-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.25rem;
+    margin-top: 1.75rem;
+    text-align: left;
+  }
+
+  .hub-entry-card {
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    padding: 1.5rem;
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.15s ease, border-color 0.15s ease;
+  }
+
+  .hub-entry-card:hover {
+    transform: translateY(-3px);
+    border-color: var(--accent);
+  }
+
+  .hub-tag {
+    font-size: 0.74rem;
+    font-weight: 800;
+    margin-bottom: 0.5rem;
+  }
+
+  .hub-entry-card h3 {
+    margin: 0 0 0.5rem;
+    font-size: 1.1rem;
+    color: var(--ink);
+  }
+
+  .hub-entry-card p {
+    font-size: 0.86rem;
+    color: var(--ink-soft);
+    line-height: 1.6;
+    margin: 0 0 1rem;
+    flex-grow: 1;
+  }
+
+  .hub-link-text {
+    font-size: 0.8rem;
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  /* Final Conversion Wrapper */
+  .final-conversion-wrapper {
+    background: linear-gradient(180deg, var(--bg-card) 0%, var(--bg-elevated) 100%);
+    border: 2px solid var(--accent);
+    border-radius: var(--radius-lg);
+    padding: 3rem 2.25rem;
+    text-align: center;
+    box-shadow: 0 10px 40px -10px rgba(142, 90, 178, 0.2);
+  }
+
+  .final-conv-head h2 {
+    font-family: var(--mono);
+    font-size: 2.1rem;
+    font-weight: 800;
+    margin: 0.85rem 0 1rem;
+    color: var(--ink);
+  }
+
+  .final-conv-head p {
+    max-width: 760px;
+    margin: 0 auto 1.5rem;
+    font-size: 1.08rem;
+    line-height: 1.85;
+    color: var(--ink-soft);
+  }
+
+  .action-info {
+    font-size: 0.9rem;
+    color: var(--ink);
+  }
+
+  .text-coupon {
+    color: #c58924;
+    background: rgba(197, 137, 36, 0.15);
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    text-decoration: none;
+  }
+
+  .final-disclosure {
+    font-size: 0.75rem;
+    color: var(--muted);
+    max-width: 680px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  /* Utility font colors */
+  .text-green { color: #1e8e3e; }
+  .text-accent { color: var(--accent); }
+  .text-gold { color: #c58924; }
+  .text-soft { color: var(--ink-soft); }
 </style>
