@@ -1,0 +1,332 @@
+---
+import Layout from '../../components/Layout.astro';
+import TypedLede from '../../components/TypedLede.astro';
+import { AIRPORTS } from '../../data/airports';
+import { SITE_NAME } from '../../lib/site';
+
+const speedtestAirports = AIRPORTS.filter((a) => Boolean(a.speedtestImage));
+---
+
+<Layout
+  title={`测速实验室与证据档案室 (2026实测) — ${SITE_NAME}`}
+  description="17 家主流机场节点测速与流媒体解锁原始截图证据库：记录真实测试时间戳、Shadowsocks/VLESS 协议、延迟丢包率与 1122x1402 高清实测档案。"
+  canonicalPath="/speedtest/"
+>
+  <main class="content-shell">
+    <div class="page-hero">
+      <p class="eyebrow"><span class="status-dot dot-green"></span>BENCHMARK LAB · VERIFIED EVIDENCE ROOM</p>
+      <h1>测速实验室与证据档案室</h1>
+      <TypedLede text="原始测速截图与网络参数透明归档，拒绝无依据造假，为决策提供最硬核的技术佐证。" />
+    </div>
+
+    <!-- 实验室审计声明与测试环境 -->
+    <section class="section" aria-label="Testing Environment Audit">
+      <div class="audit-manifest-box font-mono">
+        <div class="manifest-header">
+          <span class="manifest-title">📋 2026-08-11 实测批次审计数据清单 (Manifest)</span>
+          <span class="manifest-status">STATUS: VERIFIED</span>
+        </div>
+        <div class="manifest-grid">
+          <div class="m-item">
+            <span class="m-k">测试批次标识</span>
+            <span class="m-v">speedtest-2026-08-11-cst</span>
+          </div>
+          <div class="m-item">
+            <span class="m-k">数据状态</span>
+            <span class="m-v text-green">measured (实机单节点实测)</span>
+          </div>
+          <div class="m-item">
+            <span class="m-k">测试工具体系</span>
+            <span class="m-v">MAI-TEST-BOT 2.0.0 / 喵速 4.7.0</span>
+          </div>
+          <div class="m-item">
+            <span class="m-k">测试基准时区</span>
+            <span class="m-v">Asia/Shanghai (CST / UTC+8)</span>
+          </div>
+        </div>
+        <div class="manifest-notes">
+          <p>
+            <strong>说明：</strong>本档案室所录入之 17 份测速图为当次测试环境（千兆对等带宽、特定节点服务器负载）下的真实捕获快照。原始图片尺寸全部保持为 1122 × 1402 px，未进行任何改写，确保测试时间戳防伪可追溯。
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 测速图证据矩阵卡片 -->
+    <section class="section" aria-label="Evidence Gallery">
+      <div class="evidence-grid">
+        {speedtestAirports.map((airport) => (
+          <article class="evidence-card">
+            <div class="evidence-header">
+              <div class="evidence-brand-title">
+                <h3>{airport.name}</h3>
+                <span class="evidence-rank">#{String(airport.rank).padStart(2, '0')}</span>
+              </div>
+              <span class="evidence-time font-mono">
+                {airport.speedtest ? airport.speedtest.testedAt : '2026-08-11 实测'}
+              </span>
+            </div>
+
+            <div class="evidence-preview-wrap">
+              <a href={airport.speedtestImage} target="_blank" title="点击打开查看 1122x1402 高清原始截图">
+                <img
+                  src={airport.speedtestImage}
+                  alt={`${airport.name} 真实节点测速图`}
+                  loading="lazy"
+                  class="evidence-thumbnail"
+                />
+                <div class="zoom-overlay">
+                  <span>🔍 点击查看高清防伪原图</span>
+                </div>
+              </a>
+            </div>
+
+            <div class="evidence-footer">
+              <div class="evidence-summary font-mono">
+                <span>线路: {airport.lineType}</span>
+                {airport.speedtest && <span class="text-accent">峰值: {airport.speedtest.peakSpeed}</span>}
+              </div>
+              <div class="evidence-btns">
+                <a href={`/airports/${airport.id}/`} class="btn-detail-link">
+                  查看完整评测 →
+                </a>
+                <a
+                  href={airport.affUrl}
+                  target="_blank"
+                  rel="nofollow sponsored noopener"
+                  class="btn-visit-link"
+                >
+                  官网直达
+                </a>
+              </div>
+            </div>
+          </article>
+        ))}
+      </div>
+    </section>
+  </main>
+</Layout>
+
+<style is:global>
+  .audit-manifest-box {
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-md);
+    background: var(--bg-elevated);
+    padding: 1.5rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .manifest-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 0.85rem;
+    margin-bottom: 1.15rem;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .manifest-title {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--ink);
+  }
+
+  .manifest-status {
+    font-size: 0.72rem;
+    color: #00e676;
+    background: color-mix(in srgb, #00e676 12%, transparent);
+    padding: 0.15rem 0.55rem;
+    border-radius: 3px;
+    font-weight: 700;
+  }
+
+  .manifest-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.15rem;
+  }
+
+  .m-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .m-k {
+    font-size: 0.72rem;
+    color: var(--muted);
+  }
+
+  .m-v {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  .manifest-notes {
+    font-family: inherit;
+    font-size: 0.82rem;
+    line-height: 1.6;
+    color: var(--muted);
+    border-top: 1px dashed var(--line);
+    padding-top: 0.85rem;
+  }
+
+  .manifest-notes p {
+    margin: 0;
+  }
+
+  /* Grid */
+  .evidence-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 2rem;
+  }
+
+  .evidence-card {
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    background: var(--bg-elevated);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.15s ease, border-color 0.15s ease;
+  }
+
+  .evidence-card:hover {
+    transform: translateY(-2px);
+    border-color: color-mix(in srgb, var(--accent) 50%, var(--line));
+  }
+
+  .evidence-header {
+    padding: 1.15rem 1.25rem;
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .evidence-brand-title {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+  }
+
+  .evidence-brand-title h3 {
+    margin: 0;
+    font-family: var(--mono);
+    font-size: 1.18rem;
+    color: var(--ink);
+  }
+
+  .evidence-rank {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    color: var(--accent);
+    font-weight: 800;
+  }
+
+  .evidence-time {
+    font-size: 0.72rem;
+    color: var(--muted);
+  }
+
+  .evidence-preview-wrap {
+    position: relative;
+    background: #0f1015;
+    padding: 0.75rem;
+    display: flex;
+    justify-content: center;
+    height: 380px;
+    overflow: hidden;
+  }
+
+  .evidence-preview-wrap a {
+    display: block;
+    width: 100%;
+    height: 100%;
+    position: relative;
+  }
+
+  .evidence-thumbnail {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top;
+    border-radius: 4px;
+    transition: transform 0.25s ease;
+  }
+
+  .evidence-card:hover .evidence-thumbnail {
+    transform: scale(1.03);
+  }
+
+  .zoom-overlay {
+    position: absolute;
+    bottom: 0.75rem;
+    right: 0.75rem;
+    background: rgba(0, 0, 0, 0.78);
+    backdrop-filter: blur(6px);
+    padding: 0.35rem 0.65rem;
+    border-radius: 4px;
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: #fff;
+    pointer-events: none;
+  }
+
+  .evidence-footer {
+    padding: 1.15rem 1.25rem;
+    border-top: 1px solid var(--line);
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+  }
+
+  .evidence-summary {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.75rem;
+    color: var(--muted);
+  }
+
+  .evidence-btns {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .btn-detail-link {
+    font-family: var(--mono);
+    font-size: 0.82rem;
+    color: var(--ink);
+    text-decoration: none;
+    font-weight: 700;
+  }
+
+  .btn-detail-link:hover {
+    color: var(--accent);
+  }
+
+  .btn-visit-link {
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    padding: 0.35rem 0.75rem;
+    background: var(--accent-soft);
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    font-weight: 700;
+    transition: all 0.12s ease;
+  }
+
+  .btn-visit-link:hover {
+    background: var(--accent);
+    color: #fff;
+  }
+</style>

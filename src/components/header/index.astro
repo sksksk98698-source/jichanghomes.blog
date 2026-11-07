@@ -9,17 +9,21 @@ import SearchIcon from './SearchIcon.astro';
 const currentPath = Astro.url.pathname;
 
 const navLinks = [
-  { href: '/', label: 'Home', current: currentPath === '/' },
-  { href: '/blog/', label: 'Blog', current: currentPath.startsWith('/blog') },
-  { href: '/tags/', label: 'Tags', current: currentPath.startsWith('/tags') },
-  { href: '/about/', label: 'About', current: currentPath === '/about/' },
+  { href: '/', label: '首页', current: currentPath === '/' },
+  { href: '/airports/', label: '机场品牌库', current: currentPath.startsWith('/airports') },
+  { href: '/speedtest/', label: '测速室', current: currentPath.startsWith('/speedtest') },
+  { href: '/clients/', label: '客户端大全', current: currentPath.startsWith('/clients') },
+  { href: '/blog/', label: '专题评测', current: currentPath.startsWith('/blog') },
+  { href: '/about/', label: '关于声明', current: currentPath === '/about/' },
 ];
 ---
 
 <header class="site-header">
   <nav class="nav" aria-label="Primary navigation">
     <a class="brand" href="/" aria-label={`${SITE_NAME} Home`}>
-      <span>{SITE_NAME}</span>
+      <span class="brand-badge-dot"></span>
+      <span class="brand-text">{SITE_NAME}</span>
+      <span class="brand-tag">NOC LAB</span>
     </a>
 
     <details class="nav-menu">
@@ -96,6 +100,25 @@ const navLinks = [
     font-weight: 700;
     letter-spacing: -0.04em;
     color: var(--ink);
+    text-decoration: none;
+  }
+
+  .brand-badge-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #00e676;
+    box-shadow: 0 0 8px rgba(0, 230, 118, 0.6);
+  }
+
+  .brand-tag {
+    font-size: 0.62rem;
+    padding: 0.12rem 0.38rem;
+    background: var(--accent-soft);
+    color: var(--accent);
+    border-radius: 3px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
   }
 
   .nav-links {

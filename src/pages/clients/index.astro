@@ -1,0 +1,317 @@
+---
+import Layout from '../../components/Layout.astro';
+import TypedLede from '../../components/TypedLede.astro';
+import { CLIENT_PLATFORMS } from '../../data/clients';
+import { SITE_NAME } from '../../lib/site';
+---
+
+<Layout
+  title={`2026 全平台机场代理客户端下载与配置指南 — ${SITE_NAME}`}
+  description="Windows、Android、iOS（小火箭/Stash）、macOS、Linux 与软路由全平台翻墙代理客户端大全：涵盖 Clash Verge Rev、v2rayN、v2rayNG、Shadowrocket、OpenClash 特性与订阅导入教程。"
+  canonicalPath="/clients/"
+>
+  <main class="content-shell">
+    <div class="page-hero">
+      <p class="eyebrow"><span class="status-dot dot-green"></span>PROXIES & CLIENTS DIRECTORY 2026</p>
+      <h1>全平台代理客户端下载与配置指南</h1>
+      <TypedLede text="覆盖全平台主流开源工具：Mihomo、Xray 与 sing-box 内核特性对比与一键分流配置教程。" />
+    </div>
+
+    <!-- 平台快速锚点导航 -->
+    <section class="section" aria-label="Platform Quick Navigation">
+      <div class="platforms-anchor-bar">
+        {CLIENT_PLATFORMS.map((platform) => (
+          <a href={`#platform-${platform.platformId}`} class="anchor-pill">
+            <span>{platform.platformName.split(' ')[0]}</span>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <!-- 平台分类主体内容 -->
+    <div class="platforms-container">
+      {CLIENT_PLATFORMS.map((platform) => (
+        <section class="section platform-section" id={`platform-${platform.platformId}`}>
+          <div class="platform-header-box">
+            <div class="platform-title-row">
+              <h2>{platform.platformName}</h2>
+              <span class="platform-count font-mono">{platform.clients.length} 款精选工具</span>
+            </div>
+            <p class="platform-desc">{platform.description}</p>
+          </div>
+
+          <!-- 客户端工具网格 -->
+          <div class="clients-cards-grid">
+            {platform.clients.map((client) => (
+              <div class="client-card">
+                <div class="client-card-top">
+                  <div>
+                    <h3 class="client-name">{client.name}</h3>
+                    <span class="client-core font-mono">内核: {client.core}</span>
+                  </div>
+                  {client.badge && <span class="client-badge">{client.badge}</span>}
+                </div>
+
+                <div class="client-features">
+                  <span class="feat-title">✨ 核心亮点：</span>
+                  <ul>
+                    {client.features.map((feat) => (
+                      <li>{feat}</li>
+                    ))}
+                  </ul>
+                </div>
+
+                <div class="client-rec">
+                  <span class="rec-label">推荐群体：</span>
+                  <p>{client.recommendedFor}</p>
+                </div>
+
+                <div class="client-footer">
+                  <span class="download-note font-mono">{client.downloadNote}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <!-- 4 步快速上手教程 -->
+          <div class="setup-guide-box">
+            <h4 class="guide-title">🚀 {platform.platformName.split(' ')[0]} 4 步快速导入教程：</h4>
+            <ol class="guide-steps">
+              {platform.setupGuideSummary.map((step) => (
+                <li>{step}</li>
+              ))}
+            </ol>
+            <div class="guide-cta-row">
+              <span class="guide-hint">还没选好适配的节点订阅？</span>
+              <a href="/airports/" class="guide-link">前往 42 家机场品牌库选购专线订阅 →</a>
+            </div>
+          </div>
+        </section>
+      ))}
+    </div>
+  </main>
+</Layout>
+
+<style is:global>
+  /* Platform Anchors */
+  .platforms-anchor-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.65rem;
+    padding: 0.85rem 1.2rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    background: var(--bg-elevated);
+    margin-bottom: 2.5rem;
+  }
+
+  .anchor-pill {
+    font-family: var(--mono);
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--ink-soft);
+    padding: 0.4rem 0.85rem;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    transition: all 0.12s ease;
+  }
+
+  .anchor-pill:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: var(--accent-soft);
+  }
+
+  /* Platform Section */
+  .platform-section {
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    background: var(--bg-elevated);
+    padding: 2rem;
+    margin-bottom: 3rem;
+  }
+
+  .platform-header-box {
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 1.25rem;
+    margin-bottom: 1.75rem;
+  }
+
+  .platform-title-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .platform-title-row h2 {
+    margin: 0;
+    font-family: var(--mono);
+    font-size: 1.45rem;
+    color: var(--ink);
+  }
+
+  .platform-count {
+    font-size: 0.78rem;
+    color: var(--accent);
+    font-weight: 700;
+    background: var(--accent-soft);
+    padding: 0.15rem 0.55rem;
+    border-radius: 3px;
+  }
+
+  .platform-desc {
+    margin: 0;
+    font-size: 0.92rem;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  /* Grid */
+  .clients-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .client-card {
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    background: var(--bg);
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .client-card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 0.9rem;
+  }
+
+  .client-name {
+    margin: 0 0 0.2rem;
+    font-family: var(--mono);
+    font-size: 1.15rem;
+    color: var(--ink);
+  }
+
+  .client-core {
+    font-size: 0.72rem;
+    color: var(--muted);
+  }
+
+  .client-badge {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    padding: 0.15rem 0.5rem;
+    background: var(--accent);
+    color: #fff;
+    border-radius: 3px;
+    font-weight: 700;
+  }
+
+  .client-features {
+    margin-bottom: 1rem;
+    font-size: 0.82rem;
+  }
+
+  .feat-title {
+    font-family: var(--mono);
+    font-weight: 700;
+    color: var(--ink);
+    display: block;
+    margin-bottom: 0.35rem;
+  }
+
+  .client-features ul {
+    margin: 0;
+    padding-left: 1.15rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    color: var(--ink-soft);
+    line-height: 1.45;
+  }
+
+  .client-rec {
+    border-top: 1px dashed var(--line);
+    padding-top: 0.75rem;
+    margin-bottom: 0.85rem;
+    font-size: 0.78rem;
+    line-height: 1.5;
+  }
+
+  .rec-label {
+    font-family: var(--mono);
+    font-weight: 700;
+    color: var(--muted);
+  }
+
+  .client-rec p {
+    margin: 0.2rem 0 0;
+    color: var(--ink-soft);
+  }
+
+  .client-footer {
+    border-top: 1px solid var(--line);
+    padding-top: 0.7rem;
+    font-size: 0.7rem;
+    color: var(--muted);
+  }
+
+  /* Setup guide */
+  .setup-guide-box {
+    background: color-mix(in srgb, var(--accent) 5%, var(--bg));
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-md);
+    padding: 1.35rem;
+  }
+
+  .guide-title {
+    margin: 0 0 0.85rem;
+    font-family: var(--mono);
+    font-size: 0.95rem;
+    color: var(--ink);
+  }
+
+  .guide-steps {
+    margin: 0 0 1.15rem;
+    padding-left: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    font-size: 0.86rem;
+    color: var(--ink-soft);
+    line-height: 1.6;
+  }
+
+  .guide-cta-row {
+    border-top: 1px solid var(--line);
+    padding-top: 0.85rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+    font-family: var(--mono);
+    font-size: 0.82rem;
+  }
+
+  .guide-hint {
+    color: var(--muted);
+  }
+
+  .guide-link {
+    color: var(--accent);
+    font-weight: 700;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+</style>

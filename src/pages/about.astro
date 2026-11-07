@@ -2,34 +2,61 @@
 import Layout from '../components/Layout.astro';
 import TypedLede from '../components/TypedLede.astro';
 import SkillsMarquee from '../components/SkillsMarquee.astro';
-import { AUTHOR_NAME, EMAIL, GITHUB_URL, SITE_NAME } from '../lib/site';
+import { EMAIL, SITE_NAME } from '../lib/site';
 ---
 
 <Layout
-  title={`About — ${SITE_NAME}`}
-  description={`关于 ${SITE_NAME} 及博主 ${AUTHOR_NAME} 的个人简介、技术栈与探索历程。`}
+  title={`关于我们与测试方法论声明 — ${SITE_NAME}`}
+  description={`了解 ${SITE_NAME} (jichanghomes.blog) 的独立评测准则、网络可观测性实测方法论、零编造数据承诺与联盟链接透明度声明。`}
   canonicalPath="/about/"
 >
   <main class="content-shell" data-pagefind-body>
     <div class="page-hero">
       <h1 class="visually-hidden">About {SITE_NAME}</h1>
-      <TypedLede text={`关于 ${SITE_NAME}：记录技术架构、工程探索与前沿思考。`} />
+      <TypedLede text={`${SITE_NAME}：以网络可观测性视角，提供客观、真实、可查验的跨境网络专线实测数据。`} />
     </div>
 
     <div class="section" style="max-width: var(--max);">
       <div class="about-grid">
         <div class="about-me">
           <div class="about-card">
-            <h3>关于本站 / ABOUT</h3>
+            <h3>关于本站 / ABOUT JICHANG HOMES</h3>
             <div class="about-prose">
               <p>
-                欢迎来到 <strong>{SITE_NAME}</strong>。这里是一个完全独立、注重阅读体验与技术深度的个人原创技术站点。
+                <strong>{SITE_NAME}（jichanghomes.blog）</strong> 创立于 2026 年，是一家专注于跨境网络专线、代理协议与机场品牌客观评测的独立技术观察站。
               </p>
               <p>
-                网站聚焦于现代化全栈开发、云原生架构、性能优化与日常技术实战复盘。每一篇文章均源自真实的工程场景与反复验证的经验沉淀，力求去粗取精、务实清晰。
+                当前网络加速与机场推荐市场充斥着大量虚假宣传、跑路隐患以及批量伪原创的低质内容。我们坚持以 <strong>Dark Network Observatory（网络可观测性实验室）</strong> 的技术标尺，为广大科研工作者、外贸出海团队、跨境电商运营者与海外流媒体爱好者提供真实、严谨且具备技术证据链的选型参考。
+              </p>
+            </div>
+          </div>
+
+          <div class="about-card" style="margin-top: 2rem;">
+            <h3>测试方法论与数据准则 / METHODOLOGY</h3>
+            <div class="about-prose">
+              <p>
+                <strong>1. 拒绝虚构与凭空捏造：</strong> 所有品牌的套餐价格、协议支持、节点数量均严格取自官方资料或当期实测。未核实的数据统一显式标注“待核实”，绝不以笃定语气误导读者。
               </p>
               <p>
-                如果你对站点内容有任何探讨、建议或合作意向，欢迎通过邮件交流：<a href={`mailto:${EMAIL}`} class="accent-link">{EMAIL}</a>。
+                <strong>2. 原始测速截图证据管理：</strong> 本站档案室保存的 17+ 份测速图全部保持 1122×1402 px 原始分辨率与测试时间戳，注明测试工具版本（MAI-TEST-BOT / 喵速）与协议类型，确保防伪可溯源。
+              </p>
+              <p>
+                <strong>3. 条件化中立结论：</strong> 我们不承诺任何“100% 不封锁”或“永久跑满千兆”的绝对化断言，如实呈现各机场在晚高峰网络抖动、特殊敏感时期节点表现以及不同流媒体平台的真实解锁边界。
+              </p>
+            </div>
+          </div>
+
+          <div class="about-card" style="margin-top: 2rem;">
+            <h3>商业赞助与推广链接透明度声明 / DISCLOSURE</h3>
+            <div class="about-prose">
+              <p>
+                本站的部分品牌详情页及表格包含合规的推广注册链接（统一标记 <code>rel="nofollow sponsored noopener"</code>）。当您通过本站链接注册时，服务商可能会向本站支付少许推广佣金，该费用由商家承担，<strong>绝不影响您的实付价格与任何折扣权益</strong>。
+              </p>
+              <p>
+                推广佣金用于维持本站服务器开销、持续采购实机套餐及开展独立测速节点测试。任何商业合作均不得干预本站评测报告的技术客观性。
+              </p>
+              <p>
+                如有任何线路反馈、测速数据纠错或评测建议，欢迎随时邮件交流：<a href={`mailto:${EMAIL}`} class="accent-link">{EMAIL}</a>。
               </p>
             </div>
           </div>
@@ -37,21 +64,27 @@ import { AUTHOR_NAME, EMAIL, GITHUB_URL, SITE_NAME } from '../lib/site';
 
         <aside>
           <div class="sidebar-card">
-            <h3>技术栈与核心关注 / FOCUS</h3>
+            <h3>实验室核心指标 / LAB OVERVIEW</h3>
             <div class="focus-entry">
-              <p class="focus-title">Full Stack Architecture</p>
-              <p class="focus-desc">TypeScript · Astro · Node.js · React</p>
+              <p class="focus-title">监测品牌库总数</p>
+              <p class="focus-desc font-mono text-accent">42 家主流机场品牌</p>
             </div>
             <div class="focus-entry">
-              <p class="focus-title">Infrastructure & DevOps</p>
-              <p class="focus-desc">Docker · Linux · CI/CD · Cloud Native</p>
+              <p class="focus-title">实机测速证据存档</p>
+              <p class="focus-desc font-mono text-green">17 份原始高清实测截图</p>
             </div>
             <div class="focus-entry">
-              <p class="focus-title">Contact & Connect</p>
+              <p class="focus-title">客户端软件覆盖</p>
+              <p class="focus-desc font-mono">Win · Android · iOS · Mac · Linux · 路由</p>
+            </div>
+            <div class="focus-entry">
+              <p class="focus-title">数据核实基准周期</p>
+              <p class="focus-desc font-mono">2026 年度持续滚动更新</p>
+            </div>
+            <div class="focus-entry">
+              <p class="focus-title">联系与纠错</p>
               <p class="focus-desc">
-                {GITHUB_URL && <a href={GITHUB_URL} target="_blank" rel="noopener noreferrer" class="accent-link">GitHub</a>}
-                {GITHUB_URL && ' · '}
-                <a href={`mailto:${EMAIL}`} class="accent-link">Email</a>
+                <a href={`mailto:${EMAIL}`} class="accent-link font-mono">{EMAIL}</a>
               </p>
             </div>
           </div>
@@ -67,7 +100,7 @@ import { AUTHOR_NAME, EMAIL, GITHUB_URL, SITE_NAME } from '../lib/site';
   .about-grid {
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(280px, 0.4fr);
-    gap: 4rem;
+    gap: 3rem;
     align-items: start;
   }
 
@@ -75,23 +108,22 @@ import { AUTHOR_NAME, EMAIL, GITHUB_URL, SITE_NAME } from '../lib/site';
     border: 1px solid var(--line);
     border-radius: var(--radius-lg);
     background: var(--bg-elevated);
-    padding: 1.5rem;
+    padding: 1.75rem;
   }
 
   .about-card h3 {
-    margin: 0 0 1rem;
+    margin: 0 0 1.15rem;
     font-family: var(--mono);
-    font-size: 0.72rem;
+    font-size: 0.78rem;
     font-weight: 700;
-    letter-spacing: 0.14em;
-    color: var(--muted);
+    letter-spacing: 0.12em;
+    color: var(--accent);
   }
 
   .about-prose p {
     margin: 0 0 1.2rem;
-    max-width: 62ch;
     color: color-mix(in srgb, var(--ink) 82%, var(--muted));
-    font-size: 1rem;
+    font-size: 0.96rem;
     line-height: 1.75;
   }
 
@@ -115,37 +147,41 @@ import { AUTHOR_NAME, EMAIL, GITHUB_URL, SITE_NAME } from '../lib/site';
     border: 1px solid var(--line);
     border-radius: var(--radius-lg);
     background: var(--bg-elevated);
-    padding: 1.5rem;
+    padding: 1.75rem;
   }
 
   .sidebar-card h3 {
-    margin: 0 0 1rem;
+    margin: 0 0 1.25rem;
     font-family: var(--mono);
-    font-size: 0.72rem;
+    font-size: 0.78rem;
     font-weight: 700;
-    letter-spacing: 0.14em;
+    letter-spacing: 0.12em;
     color: var(--muted);
   }
 
   .focus-entry {
-    margin-bottom: 1rem;
+    margin-bottom: 1.2rem;
+    border-bottom: 1px dashed var(--line);
+    padding-bottom: 0.8rem;
   }
 
   .focus-entry:last-child {
     margin-bottom: 0;
+    border-bottom: 0;
+    padding-bottom: 0;
   }
 
   .focus-title {
-    font-weight: 700;
-    font-size: 0.88rem;
-    color: var(--ink);
+    font-size: 0.82rem;
+    color: var(--muted);
+    margin: 0 0 0.25rem;
   }
 
   .focus-desc {
-    margin: 0.15rem 0 0;
-    font-family: var(--mono);
-    font-size: 0.75rem;
-    color: var(--muted);
+    margin: 0;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--ink);
   }
 
   @media (max-width: 860px) {

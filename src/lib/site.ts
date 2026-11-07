@@ -1,9 +1,9 @@
-export const SITE_NAME = 'Jichang Homes';
-export const SITE_TITLE = '吉长之家 | Jichang Homes';
-export const SITE_DESCRIPTION = '吉长之家 (Jichang Homes) - 专注前沿技术探索、全栈工程实战与生活灵感沉淀的独立博客。';
+export const SITE_NAME = '机场homes';
+export const SITE_TITLE = '机场homes | 2026专业网络可观测性实验室与机场品牌库评测';
+export const SITE_DESCRIPTION = '机场homes (jichanghomes.blog) 是专注于跨境网络专线实测、42家主流机场品牌库评测、真实测速证据链与全平台客户端导航的专业可观测性平台。';
 export const SITE_URL = 'https://jichanghomes.blog';
-export const AUTHOR_NAME = 'Jichang';
-export const AUTHOR_JOB_TITLE = 'Full Stack Engineer & Creator';
+export const AUTHOR_NAME = '机场homes 评测实验室';
+export const AUTHOR_JOB_TITLE = 'Network Observatory & Infrastructure Reviewer';
 export const EMAIL = 'contact@jichanghomes.blog';
-export const GITHUB_URL = 'https://github.com/jichanghomes';
+export const GITHUB_URL = '';
 export const LINKEDIN_URL = '';

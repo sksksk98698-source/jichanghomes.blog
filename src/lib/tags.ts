@@ -1,17 +1,13 @@
 import type { CollectionEntry } from 'astro:content';
 
 export const skills = [
-  'Astro', 'TypeScript', 'JavaScript', 'Node.js',
-  'React', 'Vue', 'HTML', 'CSS',
-  'Python', 'Go', 'Rust', 'Linux',
-  'Docker', 'Kubernetes', 'CI/CD', 'Git',
-  'PostgreSQL', 'Redis', 'REST APIs', 'Cloud Native',
-  '性能优化', '系统架构', '前端工程化', '全栈开发',
+  '光速云', 'IEPL专线', 'IPLC专线', 'BGP中转', '便宜机场',
+  'VLESS', 'Shadowsocks', 'Trojan', 'Clash Verge', '小火箭',
+  'v2rayN', 'OpenClash', 'ChatGPT解锁', 'Claude支持',
+  'TikTok直播', 'Netflix 4K', '软路由科学上网', '全屋翻墙',
+  '晚高峰测速', '抗封锁专线', '跨境电商专用', '老牌机场推荐',
 ];
 
-// URL slug for a tag. Letters and digits in any script are kept (lowercased),
-// every other run of characters collapses to a hyphen: "GitHub Actions" ->
-// "github-actions", "C++" -> "c", "中文标签" -> "中文标签".
 export function slugifyTag(tag: string): string {
   return tag
     .toLowerCase()
