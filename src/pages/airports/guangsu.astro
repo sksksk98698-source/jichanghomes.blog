@@ -1196,7 +1196,7 @@ const faqSchema = JSON.stringify({
       <div class="final-conversion-wrapper">
         <div class="final-conv-head">
           <span class="badge-crown font-mono">FINAL VERDICT · 综合评测总评</span>
-          <h2>选型总评：2026 最安心的专线主力军</h2>
+          <h2>十、选型总评：2026 最安心的专线主力军</h2>
           <p>
             在经历了多轮敏感时期与晚高峰压测后，光速云用 6 年的老牌资质与扎实的 IEPL 物理专线交出了一份近乎满分的答卷。如果您厌倦了频繁换机场、晚高峰视频转圈或突如其来的跑路失联，光速云值得作为您今后长期的网络生产力底座。
           </p>
@@ -1252,30 +1252,40 @@ const faqSchema = JSON.stringify({
   .badge-crown {
     font-size: 0.78rem;
     font-weight: 800;
-    padding: 0.25rem 0.75rem;
+    padding: 0.28rem 0.75rem;
     background: var(--accent);
     color: #fff;
     border-radius: var(--radius-sm);
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    line-height: 1.35;
   }
 
   .badge-spec {
-    font-size: 0.72rem;
-    padding: 0.22rem 0.6rem;
+    font-size: 0.74rem;
+    padding: 0.26rem 0.65rem;
     background: var(--bg-elevated);
     border: 1px solid var(--line);
     color: var(--ink-soft);
     border-radius: var(--radius-sm);
     font-weight: 600;
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    line-height: 1.35;
   }
 
   .monograph-title {
     font-family: var(--mono);
-    font-size: clamp(1.9rem, 4.2vw, 2.9rem);
+    font-size: clamp(1.75rem, 3.6vw, 2.45rem);
     font-weight: 800;
-    line-height: 1.2;
-    letter-spacing: -0.04em;
+    line-height: 1.35;
+    letter-spacing: -0.01em;
     color: var(--ink);
     margin: 0 0 1.25rem;
+    text-wrap: balance;
+    word-break: break-word;
   }
 
   .monograph-lede {
