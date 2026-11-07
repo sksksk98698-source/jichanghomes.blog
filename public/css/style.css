@@ -469,7 +469,44 @@ code, pre, kbd, samp {
 /* ===== Page hero (commits, init) ===== */
 
 .content-shell {
+    max-width: var(--max);
+    margin: 0 auto;
+    padding-inline: 1.5rem;
     padding-bottom: 5rem;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.breadcrumb-nav {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+    color: var(--muted);
+    margin: 1.5rem 0 1rem;
+    padding: 0;
+}
+
+.breadcrumb-nav a {
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.15s ease;
+}
+
+.breadcrumb-nav a:hover {
+    color: var(--accent);
+}
+
+.breadcrumb-nav .separator {
+    color: var(--line-strong);
+    user-select: none;
+}
+
+.badge-crown,
+.badge-spec {
+    white-space: nowrap !important;
+    display: inline-flex !important;
+    align-items: center;
 }
 
 .page-hero {
