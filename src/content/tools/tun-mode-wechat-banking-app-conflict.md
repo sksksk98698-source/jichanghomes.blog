@@ -83,7 +83,7 @@ curl -x http://127.0.0.1:7890 -o /dev/null -s -w "HTTP: %{http_code} | Connect: 
 3. **原生纯净住宅解锁**：全面原生解锁 ChatGPT、Claude、TikTok 与 Netflix，彻底杜绝公共节点常见的 1020 拦截与风控停权。
 4. **极致性价比**：年付折合仅约 **¥8 /月**（专属优惠码：`AMM`），更有灵活的不限时包，是兼顾极低成本与极致可靠性的终极选型。
 
-👉 **[点击直达光速云官方通道，领取专属测速与优惠体验 →](https://gscloud.site/#/register?code=AMM)**  
+👉 **<a href="https://gscloud.site/#/register?code=AMM" target="_blank" rel="nofollow sponsored noopener">点击直达光速云官方通道，领取专属测速与优惠体验 →</a>**  
 👉 **[阅读实验室专著级横评：光速云 2026 企业级 IEPL 双专线万字深度评测 →](/airports/guangsu/)**
 
 ---

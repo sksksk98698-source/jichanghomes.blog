@@ -2,6 +2,7 @@
 import Layout from '../../components/Layout.astro';
 import { getCollection, render } from 'astro:content';
 import { CATEGORIES } from '../../lib/topics';
+import { slugifyTag } from '../../lib/tags';
 
 export async function getStaticPaths() {
   const posts = await getCollection('free');
@@ -61,7 +62,7 @@ const articleSchema = JSON.stringify({
       {post.data.tags.length > 0 && (
         <div class="tag-list">
           {post.data.tags.map(tag => (
-            <a href={`/tags/${tag}/`} class="tag-item">#{tag}</a>
+            <a href={`/tags/${slugifyTag(tag)}/`} class="tag-item">#{tag}</a>
           ))}
         </div>
       )}
