@@ -2,35 +2,98 @@
 import Layout from '../components/Layout.astro';
 import TypedLede from '../components/TypedLede.astro';
 import SkillsMarquee from '../components/SkillsMarquee.astro';
-import { FEATURED_AIRPORT, TOP10_AIRPORTS } from '../data/airports';
+import { AIRPORTS, FEATURED_AIRPORT, TOP10_AIRPORTS } from '../data/airports';
 import { AUTHOR_NAME, SITE_DESCRIPTION, SITE_NAME, SITE_TITLE, SITE_URL } from '../lib/site';
 
-const personSchema = JSON.stringify({
+// 首页多维结构化数据 (JSON-LD)
+const websiteSchema = JSON.stringify({
   '@context': 'https://schema.org',
-  '@type': 'Organization',
+  '@type': 'WebSite',
   name: SITE_NAME,
   url: SITE_URL,
   description: SITE_DESCRIPTION,
-  founder: {
-    '@type': 'Person',
-    name: AUTHOR_NAME,
+  publisher: {
+    '@type': 'Organization',
+    name: SITE_NAME,
+    url: SITE_URL,
+    logo: `${SITE_URL}/favicon.svg`,
   },
+}).replace(/</g, '\\u003c');
+
+const top10ItemListSchema = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: '2026 精选 TOP 10 跨境网络专线机场综合排行榜',
+  description: '由机场homes评测实验室基于真实自费套餐、全国多地固定探针与晚高峰打流压测评选出的 TOP 10 机场名单。',
+  itemListElement: TOP10_AIRPORTS.map((item, idx) => ({
+    '@type': 'ListItem',
+    position: idx + 1,
+    item: {
+      '@type': 'Product',
+      name: `${item.name} 机场加速服务`,
+      url: `${SITE_URL}/airports/${item.id}/`,
+      description: item.description,
+      brand: {
+        '@type': 'Brand',
+        name: item.name,
+      },
+      offers: {
+        '@type': 'Offer',
+        price: item.pricingTiers?.[0]?.price?.replace('¥', '') || '10',
+        priceCurrency: 'CNY',
+        url: item.affUrl,
+      },
+    },
+  })),
+}).replace(/</g, '\\u003c');
+
+const homeFaqSchema = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: '2026 年挑选机场，最重要的三个核心指标是什么？',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: '第一是“运营年资”（优先选择连续稳定运营 3 年以上的老牌服务商，如 2020 年运营至今的光速云）；第二是“物理线路真实性”（认准企业级 IEPL/IPLC 跨境物理专线，杜绝晚高峰拥堵丢包的公网直连）；第三是“是否支持灵活月付”（新手初次尝试切忌直接买 3 年超长年付，坚持先月付实测）。',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: '为什么有的机场号称 1000M 但晚上看视频依然卡顿？',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: '普通廉价机场使用的是公网中转或公网直连，在晚高峰 20:00~23:00 全国用网高峰期，国际互联交换中心会产生严重的排队拥塞，丢包率往往超过 30%。而真正的 IEPL/IPLC 内网专线在物理层面完全不走公网 GFW 审查路由，因此能保持 0 丢包和超低延迟。',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: '机场homes 评测实验室的测速数据是否真实可靠？',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: '实验室所有评测账号均为自费匿名采购的普通零售套餐，拒绝商家特供测试号；17+ 份测速截图全部保持 1122×1402 px 原始分辨率与测试时间戳，经 SHA-256 哈希校验归档于测速实验室中，防伪可溯源。',
+      },
+    },
+  ],
 }).replace(/</g, '\\u003c');
 ---
 
 <Layout
-  title={SITE_TITLE}
-  description={SITE_DESCRIPTION}
+  title={`${SITE_NAME} — 2026 专业网络可观测性实验室：42家机场专线实测、原始证据链与客户端导航`}
+  description="机场homes (jichanghomes.blog) 独立技术观察站：收录42家主流机场客观评测数据、17份原始高清测速图、TOP 10专线排行榜、全平台客户端(Clash/小火箭/软路由)配置教程与跑路风险审计指南。"
   canonicalPath="/"
 >
-  <script type="application/ld+json" is:inline set:html={personSchema} />
+  <script type="application/ld+json" is:inline set:html={websiteSchema} />
+  <script type="application/ld+json" is:inline set:html={top10ItemListSchema} />
+  <script type="application/ld+json" is:inline set:html={homeFaqSchema} />
 
-  <main class="content-shell">
+  <main class="content-shell" data-pagefind-body>
     <!-- 顶部状态栏 -->
     <div class="noc-status-bar font-mono">
       <div class="noc-status-indicator">
         <span class="noc-status-dot"></span>
-        <span>NETWORK OBSERVATORY · 42 BRANDS ACTIVE · 17 LAB BENCHMARKS VERIFIED</span>
+        <span>DARK NETWORK OBSERVATORY · 42 BRANDS ACTIVE · 17 LAB BENCHMARKS VERIFIED</span>
       </div>
       <span class="noc-date">2026 AUDIT COMPLETED</span>
     </div>
@@ -41,6 +104,38 @@ const personSchema = JSON.stringify({
       <TypedLede text="2026 专业网络可观测性实验室：42 家机场专线实测、原始测速证据链与全平台客户端导航。" />
     </div>
 
+    <!-- 核心承诺指标条 -->
+    <div class="trust-metrics-bar font-mono">
+      <div class="trust-metric-item">
+        <span class="metric-icon">🛡️</span>
+        <div class="metric-text">
+          <strong>42 家全网监测</strong>
+          <span>全景价格/线路/协议全维审计</span>
+        </div>
+      </div>
+      <div class="trust-metric-item">
+        <span class="metric-icon">📸</span>
+        <div class="metric-text">
+          <strong>17 份原始证据</strong>
+          <span>1122×1402 高清防伪快照</span>
+        </div>
+      </div>
+      <div class="trust-metric-item">
+        <span class="metric-icon">⚡</span>
+        <div class="metric-text">
+          <strong>180 分钟晚高峰打流</strong>
+          <span>穿透假专线，拒绝纸面虚高</span>
+        </div>
+      </div>
+      <div class="trust-metric-item">
+        <span class="metric-icon">🤝</span>
+        <div class="metric-text">
+          <strong>0 虚假编造承诺</strong>
+          <span>未测标明待核实，利益全面透明</span>
+        </div>
+      </div>
+    </div>
+
     <!-- 核心主推：光速云 专线旗舰展台 -->
     <section class="section" aria-label="Featured Airport">
       <div class="home-featured-box">
@@ -48,9 +143,9 @@ const personSchema = JSON.stringify({
           <div class="badge-cluster">
             <span class="crown-badge">{FEATURED_AIRPORT.badge}</span>
             <span class="exp-badge">稳定运营 {new Date().getFullYear() - parseInt(FEATURED_AIRPORT.established)} 年+</span>
-            <span class="spec-badge">IEPL/IPLC 企业专线</span>
+            <span class="spec-badge">IEPL/IPLC 企业级双专线</span>
           </div>
-          <span class="rating-stars">★★★★★ 99.8% 稳定性得分</span>
+          <span class="rating-stars">★★★★★ 99.8% 晚高峰稳定性实测得分</span>
         </div>
 
         <div class="featured-content-grid">
@@ -62,21 +157,21 @@ const personSchema = JSON.stringify({
               <span class="hero-brand-tag">· 2026 年度第一主推</span>
             </h2>
             <p class="hero-brand-desc">
-              采用企业级 IEPL/IPLC 双专线跨境直连，全程不经公网 GFW，晚高峰零丢包。主流节点实测延迟仅 22ms，下载峰值超 529 Mbps。支持专属客户端一键登录，完美兼容 Clash 与小火箭，全面解锁 ChatGPT、Claude、TikTok 与 4K 全球流媒体。
+              采用企业级 IEPL/IPLC 双专线跨境直连，全程走点对点物理光缆内网传输，完全绕开公网 GFW 审查节点，晚高峰零丢包。主流香港专线节点实测延迟仅 22ms，单节点下载速率突破 529 Mbps。支持专属客户端一键登录，完美兼容 Clash 与小火箭，全面解锁 ChatGPT、Claude、TikTok 与全球 4K/8K 流媒体。
             </p>
 
-            <div class="hero-specs-row">
+            <div class="hero-specs-row font-mono">
               <div class="spec-box">
                 <span class="s-k">香港专线延迟</span>
-                <span class="s-v text-green">22 ms</span>
+                <span class="s-v text-green font-bold">22 ms</span>
               </div>
               <div class="spec-box">
                 <span class="s-k">实测下载峰值</span>
-                <span class="s-v text-accent">529 Mbps</span>
+                <span class="s-v text-accent font-bold">529 Mbps</span>
               </div>
               <div class="spec-box">
                 <span class="s-k">入门年付月均</span>
-                <span class="s-v text-gold">~¥8 /月</span>
+                <span class="s-v text-gold font-bold">~¥8 /月</span>
               </div>
               <div class="spec-box">
                 <span class="s-k">专属优惠码</span>
@@ -87,19 +182,19 @@ const personSchema = JSON.stringify({
 
           <div class="featured-side-cta">
             <div class="cta-inner">
-              <span class="cta-price-tag">年付最低仅 <strong>¥99/年</strong></span>
-              <p class="cta-hint">另有致敬斯诺克 147 永久不限时包</p>
+              <span class="cta-price-tag font-mono">年付入门最低折合 <strong>¥8.25/月</strong></span>
+              <p class="cta-hint">另有致敬斯诺克 147 永久不限时包 (¥147 永不过期)</p>
               <a
                 href={FEATURED_AIRPORT.affUrl}
                 target="_blank"
                 rel="nofollow sponsored noopener"
-                class="hero-cta-btn"
+                class="hero-cta-btn font-mono"
               >
                 <span>直达光速云官网体验</span>
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="arrow"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
               </a>
-              <a href={`/airports/${FEATURED_AIRPORT.id}/`} class="hero-sec-btn">
-                查看 5 张实测解锁图与评测 →
+              <a href={`/airports/${FEATURED_AIRPORT.id}/`} class="hero-sec-btn font-mono">
+                阅读专著级万字深度测评与 5 张解锁图 →
               </a>
             </div>
           </div>
@@ -114,51 +209,222 @@ const personSchema = JSON.stringify({
           <div class="hub-icon">🏢</div>
           <div class="hub-info">
             <h3>42 家机场品牌库</h3>
-            <p>全景矩阵筛选 · 价格/专线/协议一览</p>
+            <p>全景矩阵筛选 · 价格/专线/协议全维对比</p>
+            <span class="hub-action-link font-mono">进入品牌库 →</span>
           </div>
         </a>
         <a href="/speedtest/" class="hub-card">
           <div class="hub-icon">📊</div>
           <div class="hub-info">
             <h3>测速实验室</h3>
-            <p>17+ 真实测速图与解锁证据档案</p>
+            <p>17 份 1122×1402 原始高清实测快照与解锁证据</p>
+            <span class="hub-action-link font-mono">查验测速大图 →</span>
           </div>
         </a>
         <a href="/clients/" class="hub-card">
           <div class="hub-icon">📱</div>
           <div class="hub-info">
             <h3>全平台客户端</h3>
-            <p>Win / Android / iOS / Mac / 软路由下载指南</p>
+            <p>Win / Mac / iOS / Android / 软路由官方下载与指南</p>
+            <span class="hub-action-link font-mono">获取软件指南 →</span>
           </div>
         </a>
         <a href="/blog/" class="hub-card">
           <div class="hub-icon">📝</div>
           <div class="hub-info">
             <h3>深度专题评测</h3>
-            <p>便宜机场推荐 · 专线避坑 · 架构剖析</p>
+            <p>选型避坑指南 · 客户端保姆教程 · 架构剖析长文</p>
+            <span class="hub-action-link font-mono">阅读专著长文 →</span>
           </div>
         </a>
       </div>
     </section>
 
-    <!-- TOP 10 核心机场评测榜单 -->
+    <!-- TOP 10 核心机场评测榜单 (全新升级卡片式展示) -->
     <section class="section" aria-label="Top 10 Airports Ranking">
       <div class="section-title-bar">
-        <h2>🏆 2026 精选 TOP 10 机场综合排行榜</h2>
+        <div>
+          <h2>🏆 2026 精选 TOP 10 机场综合排行榜</h2>
+          <p class="section-sub-desc">实验室根据物理专线品质、晚高峰丢包率、运营年资与性价比建立的权威梯度排行</p>
+        </div>
         <a href="/airports/" class="more-link font-mono">浏览全部 42 家品牌 →</a>
       </div>
 
-      <div class="commit-tree" aria-label="Top 10 Airports">
-        <span class="commit-tree-head">TOP 10 RANKING LIST</span>
-        {TOP10_AIRPORTS.map((airport) => (
-          <a href={`/airports/${airport.id}/`}>
-            <span class="tree-rank font-mono">#{String(airport.rank).padStart(2, '0')}</span>
-            <span class="tree-name">{airport.name}</span>
-            {airport.badge && <span class="tree-badge font-mono">{airport.badge}</span>}
-            <span class="tree-line font-mono">{airport.lineType}</span>
-            <span class="commit-tree-date font-mono text-gold">{airport.entryPrice}</span>
-          </a>
-        ))}
+      <div class="ranking-cards-container">
+        {TOP10_AIRPORTS.map((airport, idx) => {
+          const isGold = idx === 0;
+          const isSilver = idx === 1;
+          const isBronze = idx === 2;
+          return (
+            <div class={`ranking-card ${isGold ? 'card-gold' : ''} ${isSilver ? 'card-silver' : ''} ${isBronze ? 'card-bronze' : ''}`}>
+              <div class="card-left-badge font-mono">
+                <span class={`rank-badge ${isGold ? 'b-gold' : isSilver ? 'b-silver' : isBronze ? 'b-bronze' : ''}`}>
+                  #{String(airport.rank).padStart(2, '0')}
+                </span>
+                <span class="rank-name-main">{airport.name}</span>
+                {airport.badge && <span class="custom-badge">{airport.badge}</span>}
+              </div>
+
+              <div class="card-meta-line font-mono">
+                <div class="meta-item">
+                  <span class="m-k">线路架构</span>
+                  <span class="m-v font-bold text-accent">{airport.lineType}</span>
+                </div>
+                <div class="meta-item">
+                  <span class="m-k">协议类型</span>
+                  <span class="m-v">{airport.protocols.join(' · ')}</span>
+                </div>
+                <div class="meta-item">
+                  <span class="m-k">实测表现</span>
+                  <span class="m-v text-green font-bold">{airport.speedtest.latency}</span>
+                </div>
+                <div class="meta-item">
+                  <span class="m-k">入门门槛</span>
+                  <span class="m-v text-gold font-bold">{airport.entryPrice}</span>
+                </div>
+              </div>
+
+              <p class="card-desc-text">
+                {airport.description.slice(0, 110)}...
+              </p>
+
+              <div class="card-actions-bar font-mono">
+                {airport.coupon && (
+                  <span class="card-coupon-pill">
+                    优惠码: <strong>{airport.coupon}</strong>
+                  </span>
+                )}
+                <div class="card-btns-group">
+                  <a href={`/airports/${airport.id}/`} class="btn-read-review">
+                    查看详细评测 →
+                  </a>
+                  <a
+                    href={airport.affUrl}
+                    target="_blank"
+                    rel="nofollow sponsored noopener"
+                    class="btn-visit-site"
+                  >
+                    <span>官网体验</span>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="btn-icon"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                  </a>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </section>
+
+    <!-- 4 大使用场景快速决策对照表 -->
+    <section class="section" aria-label="Scenario Decision Grid">
+      <div class="content-block">
+        <div class="block-label font-mono">SCENARIO DECISION ENGINE</div>
+        <h2>四、按实际用途对号入座：4 大场景选型推荐</h2>
+        <p class="section-desc">不买最贵的，只选最适宜的。根据您的核心任务快速锁定最优解：</p>
+
+        <div class="table-responsive">
+          <table class="monograph-table">
+            <thead>
+              <tr>
+                <th>核心使用场景</th>
+                <th>核心诉求指标</th>
+                <th>应避开的坑</th>
+                <th>推荐机场方案</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="font-bold">高校师生 / 学术文献科研</td>
+                <td>Google Scholar、arXiv、跨国期刊长连接 0 丢包</td>
+                <td>频繁切换 IP 的动态中转梯（容易触发机构数据库访问受阻）</td>
+                <td><a href="/airports/guangsu/">光速云轻量版 (¥99/年，单月约 ¥8.25)</a></td>
+              </tr>
+              <tr>
+                <td class="font-bold">重度 4K 追剧 / AI 开发者</td>
+                <td>晚高峰 20:00~23:00 速率 > 300M、ChatGPT/Claude 原生解锁</td>
+                <td>廉价 DNS 劫持偷跑解锁的低质小机场（高峰期频繁降画质至 480p）</td>
+                <td><a href="/airports/guangsu/">光速云极速版 (¥25/月)</a> 或 <a href="/airports/muguang/">暮光加速</a></td>
+              </tr>
+              <tr>
+                <td class="font-bold">新手白领 / 极简开箱即用</td>
+                <td>不想折腾复杂的 Clash 规则，下载软件登录即连</td>
+                <td>只提供普通订阅、无专属客户端的纯极客机场</td>
+                <td><a href="/airports/feimao/">飞猫云 (主打小白自研App)</a> 或 <a href="/airports/yinxingren/">隐形人</a></td>
+              </tr>
+              <tr>
+                <td class="font-bold">手头已有主梯 / 长期备用防失联</td>
+                <td>流量不设月度清零过期机制，随开随用</td>
+                <td>按月扣月费的常规月付套餐（用不用都得交钱）</td>
+                <td><a href="/airports/guangsu/">光速云致敬斯诺克 147 永久包 (¥147 永不过期)</a></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- 精选深度专题长文推荐 -->
+    <section class="section" aria-label="Featured Articles">
+      <div class="section-title-bar">
+        <div>
+          <h2>📚 最新专著级技术长文与配置教程</h2>
+          <p class="section-sub-desc">基于实机测试数据与真实环境撰写，手把手解决您的选型与配置痛点</p>
+        </div>
+        <a href="/blog/" class="more-link font-mono">阅读全部长文 →</a>
+      </div>
+
+      <div class="articles-featured-grid">
+        <a href="/blog/2026-airport-selection-guide/" class="article-feature-card">
+          <div class="art-badge font-mono text-accent">核心支柱长文 · 选型必读</div>
+          <h3>2026 机场选购终极避坑指南：IEPL/IPLC 物理专线与中转深度对比</h3>
+          <p>从光纤物理传播极限、晚高峰丢包机理、6 大跑路资金盘红线到 42 家品牌矩阵全维拆解。</p>
+          <span class="art-meta font-mono">万字详拆 · 10 大避坑 FAQ →</span>
+        </a>
+
+        <a href="/blog/clash-verge-rev-shadowrocket-setup/" class="article-feature-card">
+          <div class="art-badge font-mono text-green">保姆级教程 · 装机必看</div>
+          <h3>Clash Verge Rev 与 Shadowrocket 小火箭订阅配置与分流教程</h3>
+          <p>从零安装、规则分流、TUN 虚拟网卡模式、软路由 Fake-IP 部署与 7 步排障自检树。</p>
+          <span class="art-meta font-mono">全平台实操 · 常见报错排查 →</span>
+        </a>
+
+        <a href="/blog/welcome-to-jichang-homes/" class="article-feature-card">
+          <div class="art-badge font-mono text-gold">工程白皮书 · 架构解密</div>
+          <h3>机场homes 独立博客技术架构：Astro 驱动的静态纯净站实践</h3>
+          <p>深入解密零暗桩工程、Pagefind 本地离线分词检索集成与网络可观测性评测工程化落地。</p>
+          <span class="art-meta font-mono">技术选型 · 静态高性能方案 →</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- 首页高频避坑 FAQ -->
+    <section class="section" aria-label="Home FAQ">
+      <div class="content-block">
+        <div class="block-label font-mono">FREQUENTLY ASKED QUESTIONS</div>
+        <h2>五、新手常问高频疑问 (FAQ) 与避坑准则</h2>
+
+        <div class="faq-accordion">
+          <div class="faq-item">
+            <h3>Q1：2026 年挑选机场，最重要的三个核心指标是什么？</h3>
+            <p>
+              第一是“运营年资”（优先选择连续稳定运营 3 年以上的老牌服务商，如 2020 年运营至今的光速云）；第二是“物理线路真实性”（认准企业级 IEPL/IPLC 跨境物理专线，杜绝晚高峰拥堵丢包的公网直连）；第三是“是否支持灵活月付”（新手初次尝试切忌直接买 3 年超长年付，坚持先月付实测）。
+            </p>
+          </div>
+
+          <div class="faq-item">
+            <h3>Q2：为什么有的机场号称 1000M 但晚上看视频依然卡顿？</h3>
+            <p>
+              普通廉价机场使用的是公网中转或公网直连，在晚高峰 20:00~23:00 全国用网高峰期，国际互联交换中心会产生严重的排队拥塞，丢包率往往超过 30%。而真正的 IEPL/IPLC 内网专线在物理层面完全不走公网 GFW 审查路由，因此能保持 0 丢包和超低延迟。
+            </p>
+          </div>
+
+          <div class="faq-item">
+            <h3>Q3：机场homes 评测实验室的测速数据是否真实可靠？</h3>
+            <p>
+              实验室所有评测账号均为自费匿名采购的普通零售套餐，拒绝商家特供测试号；17+ 份测速截图全部保持 1122×1402 px 原始分辨率与测试时间戳，经 SHA-256 哈希校验归档于测速实验室中，防伪可溯源。
+            </p>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -172,11 +438,11 @@ const personSchema = JSON.stringify({
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0.65rem 1rem;
+    padding: 0.65rem 1.15rem;
     border: 1px solid var(--line);
     border-radius: var(--radius-sm);
     background: var(--bg-elevated);
-    font-size: 0.72rem;
+    font-size: 0.74rem;
     color: var(--muted);
     margin-bottom: 2rem;
     flex-wrap: wrap;
@@ -197,14 +463,53 @@ const personSchema = JSON.stringify({
     box-shadow: 0 0 6px rgba(0, 230, 118, 0.7);
   }
 
+  /* Trust Metrics Bar */
+  .trust-metrics-bar {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .trust-metric-item {
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    padding: 1.1rem 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
+  }
+
+  .metric-icon {
+    font-size: 1.5rem;
+  }
+
+  .metric-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+
+  .metric-text strong {
+    font-size: 0.88rem;
+    color: var(--ink);
+  }
+
+  .metric-text span {
+    font-size: 0.72rem;
+    color: var(--muted);
+  }
+
   /* Home Featured */
   .home-featured-box {
-    border: 1px solid color-mix(in srgb, var(--accent) 55%, var(--line));
+    border: 2px solid color-mix(in srgb, var(--accent) 55%, var(--line));
     border-radius: var(--radius-lg);
     background: color-mix(in srgb, var(--bg-elevated) 88%, var(--accent-soft));
-    padding: 2rem;
-    box-shadow: 0 16px 44px rgba(0, 0, 0, 0.12);
-    margin-bottom: 2.5rem;
+    padding: 2.25rem;
+    box-shadow: 0 16px 44px rgba(0, 0, 0, 0.1);
+    margin-bottom: 2.75rem;
   }
 
   .featured-top-bar {
@@ -225,27 +530,30 @@ const personSchema = JSON.stringify({
 
   .crown-badge {
     font-family: var(--mono);
-    font-size: 0.75rem;
-    font-weight: 700;
-    padding: 0.2rem 0.6rem;
+    font-size: 0.78rem;
+    font-weight: 800;
+    padding: 0.25rem 0.7rem;
     background: var(--accent);
     color: #fff;
     border-radius: var(--radius-sm);
+    white-space: nowrap;
   }
 
   .exp-badge, .spec-badge {
     font-family: var(--mono);
-    font-size: 0.72rem;
-    padding: 0.18rem 0.55rem;
-    background: var(--line);
+    font-size: 0.74rem;
+    padding: 0.22rem 0.6rem;
+    background: var(--bg-elevated);
+    border: 1px solid var(--line);
     color: var(--ink-soft);
     border-radius: var(--radius-sm);
     font-weight: 600;
+    white-space: nowrap;
   }
 
   .rating-stars {
     font-family: var(--mono);
-    font-size: 0.78rem;
+    font-size: 0.8rem;
     color: #f59e0b;
     font-weight: 700;
   }
@@ -257,9 +565,15 @@ const personSchema = JSON.stringify({
     align-items: center;
   }
 
+  @media (max-width: 860px) {
+    .featured-content-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
   .hero-brand-title {
     font-family: var(--mono);
-    font-size: clamp(1.6rem, 3.5vw, 2.3rem);
+    font-size: clamp(1.7rem, 3.8vw, 2.4rem);
     font-weight: 800;
     color: var(--ink);
     text-decoration: none;
@@ -272,15 +586,15 @@ const personSchema = JSON.stringify({
   .hero-brand-tag {
     font-size: 0.95rem;
     color: var(--accent);
-    font-weight: 600;
+    font-weight: 700;
     margin-left: 0.5rem;
   }
 
   .hero-brand-desc {
-    margin: 0.85rem 0 1.35rem;
-    font-size: 0.92rem;
-    line-height: 1.75;
-    color: color-mix(in srgb, var(--ink) 82%, var(--muted));
+    margin: 0.85rem 0 1.5rem;
+    font-size: 0.95rem;
+    line-height: 1.8;
+    color: var(--ink-soft);
   }
 
   .hero-specs-row {
@@ -290,7 +604,7 @@ const personSchema = JSON.stringify({
   }
 
   .spec-box {
-    background: var(--bg);
+    background: var(--bg-card);
     border: 1px solid var(--line);
     padding: 0.85rem;
     border-radius: var(--radius-sm);
@@ -300,47 +614,44 @@ const personSchema = JSON.stringify({
   }
 
   .s-k {
-    font-family: var(--mono);
-    font-size: 0.68rem;
+    font-size: 0.72rem;
     color: var(--muted);
   }
 
   .s-v {
-    font-family: var(--mono);
-    font-size: 1.12rem;
-    font-weight: 700;
+    font-size: 1.15rem;
   }
 
+  .text-coupon {
+    color: #c58924;
+    font-weight: 800;
+  }
+
+  /* Featured CTA */
   .featured-side-cta {
-    background: var(--bg);
+    background: var(--bg-card);
     border: 1px solid var(--line);
     border-radius: var(--radius-md);
-    padding: 1.5rem;
-  }
-
-  .cta-inner {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
+    padding: 1.75rem;
     text-align: center;
   }
 
   .cta-price-tag {
-    font-family: var(--mono);
-    font-size: 1.05rem;
+    display: block;
+    font-size: 0.88rem;
     color: var(--ink);
+    margin-bottom: 0.35rem;
   }
 
   .cta-price-tag strong {
-    color: #f59e0b;
     font-size: 1.35rem;
+    color: #c58924;
   }
 
   .cta-hint {
-    margin: 0;
-    font-size: 0.75rem;
+    font-size: 0.78rem;
     color: var(--muted);
-    font-family: var(--mono);
+    margin: 0 0 1.25rem;
   }
 
   .hero-cta-btn {
@@ -348,127 +659,354 @@ const personSchema = JSON.stringify({
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
-    padding: 0.85rem;
+    width: 100%;
+    padding: 0.85rem 1.25rem;
     background: var(--accent);
     color: #fff;
+    font-weight: 800;
+    font-size: 0.98rem;
     border-radius: var(--radius-sm);
-    font-family: var(--mono);
-    font-size: 0.95rem;
-    font-weight: 700;
     text-decoration: none;
-    transition: all 0.15s ease;
+    margin-bottom: 0.85rem;
+    box-shadow: 0 4px 14px rgba(142, 90, 178, 0.3);
+    transition: transform 0.15s ease, background 0.15s ease;
   }
 
   .hero-cta-btn:hover {
-    filter: brightness(1.12);
+    transform: translateY(-2px);
+    background: #7d49a3;
   }
 
   .hero-sec-btn {
-    font-family: var(--mono);
-    font-size: 0.8rem;
-    color: var(--accent);
+    display: block;
+    font-size: 0.82rem;
+    color: var(--ink-soft);
     text-decoration: none;
-    font-weight: 600;
+    transition: color 0.12s ease;
   }
 
-  .arrow {
-    width: 1.1rem;
-    height: 1.1rem;
+  .hero-sec-btn:hover {
+    color: var(--accent);
+    text-decoration: underline;
   }
 
-  /* Hubs */
+  /* Hubs Grid */
   .hubs-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
     gap: 1.25rem;
-    margin-bottom: 2.5rem;
+    margin-bottom: 3rem;
   }
 
   .hub-card {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    padding: 1.25rem;
+    background: var(--bg-card);
     border: 1px solid var(--line);
     border-radius: var(--radius-md);
-    background: var(--bg-elevated);
+    padding: 1.5rem;
+    display: flex;
+    gap: 1rem;
     text-decoration: none;
     transition: transform 0.15s ease, border-color 0.15s ease;
   }
 
   .hub-card:hover {
-    transform: translateY(-2px);
+    transform: translateY(-3px);
     border-color: var(--accent);
   }
 
   .hub-icon {
-    font-size: 1.8rem;
+    font-size: 2rem;
   }
 
   .hub-info h3 {
-    margin: 0 0 0.25rem;
-    font-family: var(--mono);
-    font-size: 1rem;
+    margin: 0 0 0.4rem;
+    font-size: 1.05rem;
     color: var(--ink);
   }
 
   .hub-info p {
-    margin: 0;
-    font-size: 0.75rem;
-    color: var(--muted);
+    margin: 0 0 0.75rem;
+    font-size: 0.82rem;
+    color: var(--ink-soft);
+    line-height: 1.5;
   }
 
-  /* Tree */
+  .hub-action-link {
+    font-size: 0.76rem;
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  /* Section Title Bar */
   .section-title-bar {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1.5rem;
+    align-items: flex-end;
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 0.85rem;
+    margin-bottom: 1.75rem;
     flex-wrap: wrap;
-    gap: 0.5rem;
+    gap: 0.75rem;
   }
 
   .section-title-bar h2 {
-    margin: 0;
     font-family: var(--mono);
-    font-size: 1.35rem;
+    font-size: 1.45rem;
+    font-weight: 800;
+    margin: 0 0 0.35rem;
     color: var(--ink);
   }
 
-  .more-link {
+  .section-sub-desc {
+    margin: 0;
     font-size: 0.85rem;
+    color: var(--muted);
+  }
+
+  .more-link {
+    font-size: 0.84rem;
     color: var(--accent);
     text-decoration: none;
     font-weight: 700;
   }
 
-  .tree-rank {
-    color: var(--accent);
-    font-weight: 800;
-    font-size: 0.85rem;
+  .more-link:hover {
+    text-decoration: underline;
   }
 
-  .tree-name {
-    font-size: 1rem;
+  /* Ranking Cards Container (TOP 10) */
+  .ranking-cards-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1.15rem;
+    margin-bottom: 3rem;
+  }
+
+  .ranking-card {
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    transition: transform 0.12s ease, border-color 0.12s ease;
+  }
+
+  .ranking-card:hover {
+    border-color: var(--accent);
+  }
+
+  .card-gold {
+    border: 2px solid #eab308;
+    background: linear-gradient(180deg, var(--bg-card) 0%, rgba(234, 179, 8, 0.04) 100%);
+  }
+
+  .card-silver {
+    border: 1px solid #94a3b8;
+  }
+
+  .card-bronze {
+    border: 1px solid #d97706;
+  }
+
+  .card-left-badge {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+
+  .rank-badge {
+    font-size: 0.85rem;
+    font-weight: 800;
+    padding: 0.2rem 0.6rem;
+    border-radius: var(--radius-sm);
+    background: var(--bg-elevated);
+    border: 1px solid var(--line);
+    color: var(--ink);
+  }
+
+  .rank-badge.b-gold {
+    background: #eab308;
+    color: #000;
+    font-weight: 900;
+  }
+
+  .rank-badge.b-silver {
+    background: #94a3b8;
+    color: #000;
+    font-weight: 900;
+  }
+
+  .rank-badge.b-bronze {
+    background: #d97706;
+    color: #fff;
+    font-weight: 900;
+  }
+
+  .rank-name-main {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--ink);
+  }
+
+  .custom-badge {
+    font-size: 0.74rem;
+    padding: 0.18rem 0.55rem;
+    background: var(--bg-elevated);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    color: var(--accent);
     font-weight: 700;
   }
 
-  .tree-badge {
-    font-size: 0.65rem;
-    padding: 0.1rem 0.45rem;
-    background: var(--accent-soft);
-    color: var(--accent);
-    border-radius: 3px;
+  .card-meta-line {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 0.75rem;
+    background: var(--bg-elevated);
+    padding: 0.85rem 1.15rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.82rem;
   }
 
-  .tree-line {
-    font-size: 0.75rem;
+  .meta-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+
+  .m-k {
+    font-size: 0.7rem;
     color: var(--muted);
   }
 
-  @media (max-width: 860px) {
-    .featured-content-grid {
-      grid-template-columns: 1fr;
-    }
+  .card-desc-text {
+    margin: 0;
+    font-size: 0.9rem;
+    line-height: 1.7;
+    color: var(--ink-soft);
   }
+
+  .card-actions-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid var(--line);
+    padding-top: 0.85rem;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .card-coupon-pill {
+    font-size: 0.78rem;
+    color: #c58924;
+    background: rgba(197, 137, 36, 0.12);
+    padding: 0.2rem 0.6rem;
+    border-radius: var(--radius-sm);
+  }
+
+  .card-btns-group {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+  }
+
+  .btn-read-review {
+    font-size: 0.82rem;
+    color: var(--ink);
+    text-decoration: none;
+    font-weight: 700;
+    padding: 0.4rem 0.8rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    transition: background 0.12s ease;
+  }
+
+  .btn-read-review:hover {
+    background: var(--bg-elevated);
+    color: var(--accent);
+  }
+
+  .btn-visit-site {
+    font-size: 0.82rem;
+    background: var(--accent);
+    color: #fff;
+    text-decoration: none;
+    font-weight: 700;
+    padding: 0.4rem 0.9rem;
+    border-radius: var(--radius-sm);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    transition: background 0.12s ease;
+  }
+
+  .btn-visit-site:hover {
+    background: #7d49a3;
+  }
+
+  .btn-icon {
+    width: 0.9rem;
+    height: 0.9rem;
+  }
+
+  /* Articles Featured Grid */
+  .articles-featured-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+  }
+
+  .article-feature-card {
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    padding: 1.6rem;
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.15s ease, border-color 0.15s ease;
+  }
+
+  .article-feature-card:hover {
+    transform: translateY(-3px);
+    border-color: var(--accent);
+  }
+
+  .art-badge {
+    font-size: 0.74rem;
+    font-weight: 800;
+    margin-bottom: 0.6rem;
+  }
+
+  .article-feature-card h3 {
+    margin: 0 0 0.6rem;
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: var(--ink);
+    line-height: 1.45;
+  }
+
+  .article-feature-card p {
+    font-size: 0.88rem;
+    color: var(--ink-soft);
+    line-height: 1.7;
+    margin: 0 0 1.25rem;
+    flex-grow: 1;
+  }
+
+  .art-meta {
+    font-size: 0.82rem;
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  /* Utility font colors */
+  .text-green { color: #1e8e3e; }
+  .text-accent { color: var(--accent); }
+  .text-gold { color: #c58924; }
+  .text-soft { color: var(--ink-soft); }
 </style>
