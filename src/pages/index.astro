@@ -4,49 +4,48 @@ import Layout from '../components/Layout.astro';
 import TypedLede from '../components/TypedLede.astro';
 import SkillsMarquee from '../components/SkillsMarquee.astro';
 import { formatPostDate, postSlug } from '../lib/posts';
-import { GITHUB_URL, LINKEDIN_URL, SITE_URL } from '../lib/site';
+import { AUTHOR_NAME, AUTHOR_JOB_TITLE, GITHUB_URL, LINKEDIN_URL, SITE_DESCRIPTION, SITE_NAME, SITE_TITLE, SITE_URL } from '../lib/site';
 
 const posts = (await getCollection('blog'))
   .filter((post) => !post.data.draft)
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
-  .slice(0, 3);
+  .slice(0, 5);
 
 const personSchema = JSON.stringify({
   '@context': 'https://schema.org',
   '@type': 'Person',
-  name: 'Your Name',
-  jobTitle: 'Your Job Title',
+  name: AUTHOR_NAME,
+  jobTitle: AUTHOR_JOB_TITLE,
   url: SITE_URL,
-  sameAs: [GITHUB_URL, LINKEDIN_URL],
-  // Escape < so no value can ever close the inline <script> tag.
+  sameAs: [GITHUB_URL, LINKEDIN_URL].filter(Boolean),
 }).replace(/</g, '\\u003c');
 ---
 
 <Layout
-  title="Palette — Your Name"
-  description="A short tagline describing you and what you write about."
+  title={SITE_TITLE}
+  description={SITE_DESCRIPTION}
   canonicalPath="/"
 >
   <script type="application/ld+json" is:inline set:html={personSchema} />
   <main class="content-shell">
     <div class="page-hero">
-      <h1 class="visually-hidden">Home</h1>
-      <TypedLede text="A short tagline describing you and what you write about." />
+      <h1 class="visually-hidden">{SITE_NAME}</h1>
+      <TypedLede text={SITE_DESCRIPTION} />
     </div>
 
     <section class="section" aria-label="Recent posts">
       {posts.length === 0 ? (
-        <p class="empty-note">No posts yet, check back soon.</p>
+        <p class="empty-note">暂无文章，敬请期待更新。</p>
       ) : (
         <nav class="commit-tree" aria-label="Recent posts">
-          <a class="commit-tree-head" href="/blog/" title="All posts">Blog</a>
+          <a class="commit-tree-head" href="/blog/" title="All posts">Blog / 全部文章</a>
           {posts.map((post) => (
             <a href={`/blog/${postSlug(post)}/`}>
               {post.data.title}
               <span class="commit-tree-date">{formatPostDate(post.data.date)}</span>
             </a>
           ))}
-          <a href="/about/">About</a>
+          <a href="/about/">About / 关于本站</a>
         </nav>
       )}
     </section>
@@ -56,8 +55,6 @@ const personSchema = JSON.stringify({
 </Layout>
 
 <style is:global>
-  /* Recent commits on main: the same branch-line tree as the post-page TOC.
-   One line per commit, node on the line, Init as the root at the bottom. */
   .commit-tree {
     display: grid;
     gap: 1.15rem;
@@ -101,8 +98,6 @@ const personSchema = JSON.stringify({
     border-color: var(--accent);
   }
 
-  /* The branch label heads the tree: filled node on the same line, like the
-   company labels once were. */
   .commit-tree .commit-tree-head {
     color: var(--accent);
     font-size: 0.95rem;

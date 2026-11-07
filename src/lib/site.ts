@@ -1,5 +1,9 @@
-export const SITE_NAME = 'Palette';
-export const SITE_URL = 'https://example.com';
-export const EMAIL = 'you@example.com';
-export const GITHUB_URL = 'https://github.com/your-username';
-export const LINKEDIN_URL = 'https://linkedin.com/in/your-profile';
+export const SITE_NAME = 'Jichang Homes';
+export const SITE_TITLE = '吉长之家 | Jichang Homes';
+export const SITE_DESCRIPTION = '吉长之家 (Jichang Homes) - 专注前沿技术探索、全栈工程实战与生活灵感沉淀的独立博客。';
+export const SITE_URL = 'https://jichanghomes.blog';
+export const AUTHOR_NAME = 'Jichang';
+export const AUTHOR_JOB_TITLE = 'Full Stack Engineer & Creator';
+export const EMAIL = 'contact@jichanghomes.blog';
+export const GITHUB_URL = 'https://github.com/jichanghomes';
+export const LINKEDIN_URL = '';

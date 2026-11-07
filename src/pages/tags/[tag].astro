@@ -4,6 +4,7 @@ import type { CollectionEntry } from 'astro:content';
 import Layout from '../../components/Layout.astro';
 import PostCard from '../../components/PostCard.astro';
 import { getAllTags, slugifyTag } from '../../lib/tags';
+import { SITE_NAME } from '../../lib/site';
 
 export async function getStaticPaths() {
   const posts = await getCollection('blog');
@@ -32,8 +33,8 @@ const slug = Astro.params.tag!;
 ---
 
 <Layout
-  title={`#${name} — Your Name`}
-  description={`Posts tagged "${name}".`}
+  title={`#${name} — ${SITE_NAME}`}
+  description={`${SITE_NAME} 标签 #${name} 下的相关文章列表。`}
   canonicalPath={`/tags/${slug}/`}
 >
   <main class="content-shell">
@@ -42,9 +43,9 @@ const slug = Astro.params.tag!;
       <h1># {name}</h1>
       <p class="hero-lede">
         {posts.length === 0
-          ? 'Nothing here yet — check back soon.'
-          : `${posts.length} post${posts.length === 1 ? '' : 's'} tagged ${name}.`}{' '}
-        <a class="inline-link" href="/tags/">all tags</a>
+          ? '该标签下暂无文章，敬请期待更新。'
+          : `共找到 ${posts.length} 篇与 ${name} 相关的文章。`}{' '}
+        <a class="inline-link" href="/tags/">全部标签</a>
       </p>
     </section>
 

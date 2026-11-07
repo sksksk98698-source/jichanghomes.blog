@@ -3,19 +3,20 @@ import { getCollection } from 'astro:content';
 import Layout from '../../components/Layout.astro';
 import TypedLede from '../../components/TypedLede.astro';
 import { getAllTags } from '../../lib/tags';
+import { SITE_NAME } from '../../lib/site';
 
 const tags = getAllTags(await getCollection('blog'));
 ---
 
 <Layout
-  title="Tags — Your Name"
-  description="Posts grouped by tag."
+  title={`Tags — ${SITE_NAME}`}
+  description={`${SITE_NAME} 标签索引库，快速检索对应技术专题与文章分类。`}
   canonicalPath="/tags/"
 >
   <main class="content-shell">
     <section class="page-hero">
-      <h1 class="visually-hidden">Tags</h1>
-      <TypedLede text="Posts grouped by tag." />
+      <h1 class="visually-hidden">Tags - {SITE_NAME}</h1>
+      <TypedLede text="标签索引库：按专题与技术栈探索文章。" />
     </section>
 
     <section class="section" aria-label="Tags">

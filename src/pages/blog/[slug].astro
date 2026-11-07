@@ -2,7 +2,7 @@
 import { getCollection, render } from 'astro:content';
 import Layout from '../../components/Layout.astro';
 import { formatPostDate, postSlug } from '../../lib/posts';
-import { SITE_URL } from '../../lib/site';
+import { AUTHOR_NAME, SITE_NAME, SITE_URL } from '../../lib/site';
 import { slugifyTag } from '../../lib/tags';
 
 export async function getStaticPaths() {
@@ -30,18 +30,27 @@ const postSchema = JSON.stringify({
   headline: post.data.title,
   description: post.data.description,
   datePublished: post.data.date.toISOString(),
-  url: new URL(`/blog/${slug}/`, Astro.site).toString(),
+  dateModified: post.data.date.toISOString(),
+  mainEntityOfPage: {
+    '@type': 'WebPage',
+    '@id': new URL(`/blog/${slug}/`, SITE_URL).toString(),
+  },
+  url: new URL(`/blog/${slug}/`, SITE_URL).toString(),
   author: {
     '@type': 'Person',
-    name: 'Your Name',
+    name: AUTHOR_NAME,
     url: new URL('/about/', SITE_URL).toString(),
   },
-  // Escape < so a post title/description can never close the <script> tag.
+  publisher: {
+    '@type': 'Organization',
+    name: SITE_NAME,
+    url: SITE_URL,
+  },
 }).replace(/</g, '\\u003c');
 ---
 
 <Layout
-  title={`${post.data.title} — Your Name`}
+  title={`${post.data.title} — ${SITE_NAME}`}
   description={post.data.description}
   canonicalPath={`/blog/${slug}/`}
   ogType="article"
@@ -76,30 +85,12 @@ const postSchema = JSON.stringify({
         <div class="article-prose">
           <Content />
         </div>
-        <section class="article-comments" aria-label="Comments">
-          <div id="remark42"></div>
-        </section>
       </article>
     </div>
   </main>
 
   <script>
-    // Optional Remark42 comments. Point these at your own instance, or
-    // remove the #remark42 section above to disable comments entirely.
-    const REMARK_HOST = 'https://comments.example.com';
-
-    type Remark42 = {
-      createInstance: (config: Record<string, unknown>) => { destroy: () => void };
-      changeTheme: (theme: 'light' | 'dark') => void;
-    };
-    const w = window as typeof window & {
-      remark_config?: Record<string, unknown>;
-      REMARK42?: Remark42;
-    };
-
     let tocObserver: IntersectionObserver | undefined;
-    let commentsInstance: { destroy: () => void } | undefined;
-    let embedRequested = false;
 
     function initToc() {
       tocObserver?.disconnect();
@@ -130,63 +121,8 @@ const postSchema = JSON.stringify({
       for (const heading of headings) tocObserver.observe(heading);
     }
 
-    // Map the active palette to Remark42's light/dark themes by the
-    // luminance of --bg, so all palettes work without a hard-coded list.
-    function paletteTheme(): 'light' | 'dark' {
-      const bg = getComputedStyle(document.documentElement).getPropertyValue('--bg').trim();
-      const hex = bg.replace('#', '');
-      const full = hex.length === 3 ? [...hex].map((c) => c + c).join('') : hex;
-      const luma =
-        0.2126 * parseInt(full.slice(0, 2), 16) +
-        0.7152 * parseInt(full.slice(2, 4), 16) +
-        0.0722 * parseInt(full.slice(4, 6), 16);
-      return luma > 128 ? 'light' : 'dark';
-    }
-
-    function initComments() {
-      const node = document.getElementById('remark42');
-      if (!node) {
-        try {
-          commentsInstance?.destroy();
-        } catch {}
-        commentsInstance = undefined;
-        return;
-      }
-      // The comments service only exists on the public origin.
-      if (window.location.hostname !== 'example.com') return;
-
-      w.remark_config = {
-        host: REMARK_HOST,
-        site_id: 'example',
-        url: window.location.origin + window.location.pathname,
-        theme: paletteTheme(),
-        show_email_subscription: false,
-      };
-
-      if (w.REMARK42) {
-        try {
-          commentsInstance?.destroy();
-        } catch {}
-        commentsInstance = w.REMARK42.createInstance(w.remark_config);
-      } else if (!embedRequested) {
-        // embed.mjs self-initializes against #remark42 using remark_config.
-        embedRequested = true;
-        const script = document.createElement('script');
-        script.src = `${REMARK_HOST}/web/embed.mjs`;
-        script.type = 'module';
-        document.head.append(script);
-      }
-    }
-
-    // <html> survives view transitions, so one observer follows palette
-    // switches for the life of the session.
-    new MutationObserver(() => {
-      w.REMARK42?.changeTheme(paletteTheme());
-    }).observe(document.documentElement, { attributeFilter: ['data-palette'] });
-
     function init() {
       initToc();
-      initComments();
     }
 
     init();
@@ -224,52 +160,29 @@ const postSchema = JSON.stringify({
     gap: clamp(2rem, 6vw, 4rem);
     align-items: start;
     padding-top: 4rem;
-    /* Sits directly under the sticky header's border — avoid a double line. */
     border-top: 0;
-  }
-
-  .article-shell {
-    min-width: 0;
   }
 
   .article-toc {
     position: sticky;
     top: 6rem;
-    padding-top: 0.35rem;
-    color: color-mix(in srgb, var(--ink) 58%, var(--muted));
     font-family: var(--mono);
-    font-size: 0.78rem;
+    font-size: 0.82rem;
   }
 
-  /* Git-tree TOC: a branch line with one node per section; the node of the
-   section currently in view fills with the accent color (scroll spy sets
-   aria-current on the links). */
   .article-toc nav {
-    display: grid;
-    gap: 0.9rem;
-    margin-left: 5px;
-    border-left: 2px solid var(--line);
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+    padding-left: 0.85rem;
+    border-left: 1px solid var(--line);
   }
 
   .article-toc a {
-    position: relative;
-    padding-left: 1.1rem;
-    color: color-mix(in srgb, var(--ink) 58%, var(--muted));
-    line-height: 1.35;
+    color: var(--muted);
     text-decoration: none;
-  }
-
-  .article-toc a::before {
-    content: "";
-    position: absolute;
-    left: -6px;
-    top: 0.22em;
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    border: 2px solid var(--line-strong);
-    background: var(--bg);
-    transition: border-color 0.15s ease, background 0.15s ease;
+    line-height: 1.45;
+    transition: color 120ms ease;
   }
 
   .article-toc a:hover,
@@ -277,140 +190,111 @@ const postSchema = JSON.stringify({
     color: var(--accent);
   }
 
-  .article-toc a:hover::before {
-    border-color: var(--accent);
-  }
-
-  .article-toc a[aria-current="true"]::before {
-    border-color: var(--accent);
-    background: var(--accent);
+  .article-shell {
+    min-width: 0;
   }
 
   .article-header {
-    margin-bottom: 2.35rem;
-    padding-bottom: 2rem;
-    border-bottom: 1px solid var(--line);
+    margin-bottom: 2.75rem;
   }
 
   .article-header h1 {
-    max-width: 22ch;
-    margin: 0;
-    color: var(--ink);
+    margin: 0 0 0.6rem;
     font-family: var(--mono);
-    font-weight: 400;
-    font-size: clamp(2rem, 4vw, 3.4rem);
-    line-height: 1;
-    letter-spacing: -0.055em;
+    font-size: clamp(1.85rem, 4.2vw, 2.75rem);
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.04em;
+    color: var(--ink);
   }
 
   .article-header p:last-child {
-    max-width: 680px;
-    margin: 1.2rem 0 0;
-    color: color-mix(in srgb, var(--ink) 68%, var(--muted));
-    font-size: 1.18rem;
-    line-height: 1.7;
+    margin: 0;
+    font-size: 1.08rem;
+    line-height: 1.6;
+    color: var(--ink-soft);
   }
 
   .article-prose {
-    color: var(--ink);
-    font-size: 1.04rem;
-    line-height: 1.82;
+    font-size: 1.02rem;
+    line-height: 1.8;
+    color: var(--ink-soft);
   }
 
-  .article-prose > *:first-child { margin-top: 0; }
-
-  .article-prose h1,
-  .article-prose h2,
-  .article-prose h3 {
-    color: var(--ink);
-    line-height: 1.05;
-    letter-spacing: -0.04em;
-    font-family: var(--mono);
-    font-weight: 400;
-  }
-
-  .article-prose h1 {
-    margin: 2.3rem 0 1rem;
-    font-size: clamp(2rem, 5vw, 3.5rem);
+  .article-prose p {
+    margin: 0 0 1.5rem;
   }
 
   .article-prose h2 {
-    margin: 2.2rem 0 0.75rem;
-    font-size: clamp(1.55rem, 3vw, 2.2rem);
+    margin: 3rem 0 1rem;
+    font-family: var(--mono);
+    font-size: 1.45rem;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    color: var(--ink);
+    scroll-margin-top: 6rem;
   }
 
   .article-prose h3 {
-    margin: 1.7rem 0 0.65rem;
-    font-size: 1.25rem;
+    margin: 2.25rem 0 0.85rem;
+    font-family: var(--mono);
+    font-size: 1.18rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    scroll-margin-top: 6rem;
   }
 
-  .article-prose p,
   .article-prose ul,
   .article-prose ol {
-    margin: 1rem 0;
+    margin: 0 0 1.5rem;
+    padding-left: 1.5rem;
   }
 
-  .article-prose ul,
-  .article-prose ol {
-    padding-left: 1.35rem;
+  .article-prose li {
+    margin-bottom: 0.45rem;
   }
-
-  .article-prose li + li { margin-top: 0.42rem; }
-
-  .article-prose blockquote {
-    margin: 1.2rem 0;
-    border-left: 2px solid color-mix(in srgb, var(--accent) 72%, var(--line));
-    border-radius: var(--radius-sm);
-    background: color-mix(in srgb, var(--bg-elevated) 46%, transparent);
-    padding: 0.72rem 0.95rem;
-    color: color-mix(in srgb, var(--ink) 76%, var(--muted));
-    font-size: 1.06rem;
-    font-weight: 560;
-    line-height: 1.7;
-  }
-
-  .article-prose blockquote p { margin: 0; }
 
   .article-prose a {
     color: var(--accent);
-    font-weight: 700;
     text-decoration: underline;
-    text-decoration-thickness: 1px;
-    text-underline-offset: 0.18em;
+    text-underline-offset: 3px;
   }
 
-  .article-prose code {
-    border: 1px solid var(--line);
-    border-radius: var(--radius-sm);
-    background: var(--bg-elevated);
+  .article-prose a:hover {
     color: var(--ink);
-    padding: 0.08rem 0.28rem;
-    font-size: 0.9em;
+  }
+
+  .article-prose blockquote {
+    margin: 2rem 0;
+    padding: 0.85rem 1.25rem;
+    border-left: 3px solid var(--accent);
+    background: var(--accent-soft);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    color: var(--ink);
+    font-style: italic;
+  }
+
+  .article-prose blockquote p:last-child {
+    margin-bottom: 0;
   }
 
   .article-prose pre {
-    overflow-x: auto;
-    border: 1px solid var(--line);
+    margin: 1.75rem 0;
+    padding: 1.25rem;
     border-radius: var(--radius-md);
-    background: var(--bg-elevated);
-    color: var(--ink);
-    padding: 1rem;
+    border: 1px solid var(--line-strong);
+    overflow-x: auto;
+    font-size: 0.88rem;
+    line-height: 1.6;
   }
 
-  /* Shiki (theme: 'css-variables') token colors, mapped onto the palette
-   variables so syntax highlighting follows the active theme. */
-  :root {
-    --astro-code-foreground: var(--ink-soft);
-    --astro-code-background: var(--bg-elevated);
-    --astro-code-token-constant: var(--accent);
-    --astro-code-token-string: var(--term-str);
-    --astro-code-token-string-expression: var(--term-str);
-    --astro-code-token-comment: var(--muted-2);
-    --astro-code-token-keyword: var(--red);
-    --astro-code-token-parameter: var(--ink-soft);
-    --astro-code-token-function: var(--term-cmd);
-    --astro-code-token-punctuation: var(--muted);
-    --astro-code-token-link: var(--accent);
+  .article-prose code {
+    font-family: var(--mono);
+    font-size: 0.88em;
+    background: var(--code-bg, color-mix(in srgb, var(--line) 40%, transparent));
+    padding: 0.15em 0.4em;
+    border-radius: var(--radius-sm);
   }
 
   .article-prose pre code {
@@ -418,12 +302,6 @@ const postSchema = JSON.stringify({
     background: transparent;
     color: inherit;
     padding: 0;
-  }
-
-  .article-comments {
-    margin-top: 3.2rem;
-    padding-top: 2.2rem;
-    border-top: 1px solid var(--line);
   }
 
   @media (max-width: 1040px) {

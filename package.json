@@ -1,15 +1,8 @@
 {
-  "name": "astro-palette",
+  "name": "jichanghomes-blog",
+  "version": "1.0.0",
   "private": true,
-  "license": "AGPL-3.0-or-later",
-  "description": "A minimal Astro theme for personal sites and blogs",
-  "keywords": [
-    "astro",
-    "withastro",
-    "astro-theme",
-    "astro-template",
-    "blog"
-  ],
+  "description": "吉长之家 (Jichang Homes) - 独立原创技术博客与知识平台",
   "type": "module",
   "scripts": {
     "dev": "astro dev",

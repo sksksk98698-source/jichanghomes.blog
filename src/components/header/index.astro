@@ -11,6 +11,7 @@ const currentPath = Astro.url.pathname;
 const navLinks = [
   { href: '/', label: 'Home', current: currentPath === '/' },
   { href: '/blog/', label: 'Blog', current: currentPath.startsWith('/blog') },
+  { href: '/tags/', label: 'Tags', current: currentPath.startsWith('/tags') },
   { href: '/about/', label: 'About', current: currentPath === '/about/' },
 ];
 ---
@@ -44,15 +45,21 @@ const navLinks = [
       <button class="nav-icon-link" type="button" id="search-open" aria-label="Search (Ctrl+K)">
         <SearchIcon />
       </button>
-      <a class="nav-icon-link" href={GITHUB_URL} aria-label="GitHub" target="_blank" rel="noopener">
-        <GitHubIcon />
-      </a>
-      <a class="nav-icon-link" href={LINKEDIN_URL} aria-label="LinkedIn" target="_blank" rel="noopener">
-        <LinkedInIcon />
-      </a>
-      <a class="nav-icon-link" href={`mailto:${EMAIL}`} aria-label="Email">
-        <EmailIcon />
-      </a>
+      {GITHUB_URL && (
+        <a class="nav-icon-link" href={GITHUB_URL} aria-label="GitHub" target="_blank" rel="noopener noreferrer">
+          <GitHubIcon />
+        </a>
+      )}
+      {LINKEDIN_URL && (
+        <a class="nav-icon-link" href={LINKEDIN_URL} aria-label="LinkedIn" target="_blank" rel="noopener noreferrer">
+          <LinkedInIcon />
+        </a>
+      )}
+      {EMAIL && (
+        <a class="nav-icon-link" href={`mailto:${EMAIL}`} aria-label="Email">
+          <EmailIcon />
+        </a>
+      )}
       <a class="nav-icon-link" href="/rss.xml" aria-label="RSS feed">
         <RssIcon />
       </a>
@@ -71,9 +78,6 @@ const navLinks = [
   }
 
   .nav {
-    /* Positioned so .nav-menu-panel can anchor to the whole bar — anchoring
-     to the hamburger itself pushes the panel off-screen on narrow
-     viewports (the button sits left of the nav-tools icon row). */
     position: relative;
     max-width: var(--max);
     margin: 0 auto;
@@ -103,7 +107,6 @@ const navLinks = [
     font-family: var(--mono);
   }
 
-  /* Blinking block cursor marks the current page in the nav. */
   .nav-links a[aria-current="page"]::after,
   .nav-menu-panel a[aria-current="page"]::after {
     content: "";
@@ -218,8 +221,6 @@ const navLinks = [
     height: 1rem;
   }
 
-  /* Solid glyphs (GitHub, LinkedIn) take the fill; stroke-drawn icons
-   (email envelope, search magnifier) declare fill="none" and keep it. */
   .nav-icon-link svg:not([fill="none"]) {
     fill: currentColor;
   }
@@ -241,10 +242,6 @@ const navLinks = [
       gap: 0.35rem;
     }
 
-    /* The brand + hamburger + icon row don't all fit on one line below
-     ~370px (iPhone SE and similar) — wrap the icon row onto its own
-     line instead of letting it overflow the viewport. Harmless on
-     wider phones where everything already fits on one row. */
     .nav {
       flex-wrap: wrap;
       row-gap: 0.5rem;

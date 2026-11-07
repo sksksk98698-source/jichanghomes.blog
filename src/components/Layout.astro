@@ -12,6 +12,7 @@ interface Props {
   description: string;
   canonicalPath?: string;
   ogType?: 'website' | 'article';
+  image?: string;
 }
 
 const {
@@ -19,21 +20,31 @@ const {
   description,
   canonicalPath = '/',
   ogType = 'website',
+  image = '/assets/og.png',
 } = Astro.props;
 
 const site = SITE_URL;
 const canonicalUrl = new URL(canonicalPath, site).toString();
-// Replace public/assets/og.png with your own 1200x630 social preview image.
-const ogImageUrl = new URL('/assets/og.png', site).toString();
+const ogImageUrl = new URL(image, site).toString();
+
+const websiteSchema = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: SITE_NAME,
+  url: SITE_URL,
+  description,
+  inLanguage: 'zh-CN',
+}).replace(/</g, '\\u003c');
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="zh-CN">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
     <meta name="theme-color" content="#f0eee9" />
     <link rel="canonical" href={canonicalUrl} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -45,6 +56,7 @@ const ogImageUrl = new URL('/assets/og.png', site).toString();
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:locale" content="zh_CN" />
     <meta property="og:image" content={ogImageUrl} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
@@ -53,6 +65,8 @@ const ogImageUrl = new URL('/assets/og.png', site).toString();
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImageUrl} />
+
+    <script type="application/ld+json" is:inline set:html={websiteSchema} />
 
     <link rel="preload" href="/assets/jbm.woff2" as="font" type="font/woff2" crossorigin />
     <script is:inline define:vars={{ DEFAULT_PALETTE }}>

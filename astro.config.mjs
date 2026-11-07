@@ -37,13 +37,10 @@ function pagefindDev() {
 }
 
 export default defineConfig({
-  site: 'https://example.com',
-  // v7 default ('jsx') strips spaces between inline elements, which corrupts
-  // Pagefind's text extraction of adjacent spans (e.g. job titles + dates).
+  site: 'https://jichanghomes.blog',
+  trailingSlash: 'always',
   compressHTML: true,
   markdown: {
-    // Emit --astro-code-* variables instead of fixed hex colors, so code
-    // blocks follow the active palette (defined in public/css/style.css).
     shikiConfig: { theme: 'css-variables' },
   },
   integrations: [sitemap(), pagefindDev()],
