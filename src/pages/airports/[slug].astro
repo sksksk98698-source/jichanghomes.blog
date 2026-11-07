@@ -5,7 +5,7 @@ import type { AirportBrand } from '../../data/airports';
 import { SITE_NAME, SITE_URL } from '../../lib/site';
 
 export async function getStaticPaths() {
-  return AIRPORTS.map((airport) => ({
+  return AIRPORTS.filter((airport) => airport.id !== 'guangsu').map((airport) => ({
     params: { slug: airport.id },
     props: { airport },
   }));
