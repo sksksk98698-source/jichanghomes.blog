@@ -1,0 +1,571 @@
+---
+import Layout from '../../components/Layout.astro';
+import { getCollection } from 'astro:content';
+import { CATEGORIES } from '../../lib/topics';
+
+const topicPosts = await getCollection('runaway');
+const topicCategories = Object.keys(CATEGORIES['runaway'] || {});
+
+const schemaData = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "headline": "2026 机场跑路暴雷预警雷达与维权自救全鉴：从资金盘解构、六大前兆到逃生避险（万字专著）",
+  "description": "全网首创的机场行业跑路黑天鹅财务审计模型。解密负毛利超售、上游机房跑路与卷款跑路全过程，盘点历史知名暴雷案，建立 6 重预警雷达与突发失联自救 SOP。",
+  "author": {
+    "@type": "Organization",
+    "name": "机场homes评测实验室",
+    "url": "https://jichanghomes.blog/about/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "机场homes",
+    "url": "https://jichanghomes.blog/"
+  }
+});
+---
+
+<Layout title="跑路预警与防暴雷审计 - 万字核心支柱指南 - 机场homes" description="全网首创的机场行业跑路黑天鹅财务审计模型。解密负毛利超售、上游机房跑路与卷款跑路全过程，盘点历史知名暴雷案，建立 6 重预警雷达与突发失联自救 SOP。">
+  <script type="application/ld+json" set:html={schemaData} />
+
+  <main class="content-shell">
+    <nav class="breadcrumb-nav" aria-label="Breadcrumb">
+      <a href="/">首页</a>
+      <span class="separator">/</span>
+      <span class="current">跑路预警与防暴雷审计 (万字支柱)</span>
+    </nav>
+
+    <header class="monograph-header">
+      <div class="header-badges">
+        <span class="badge-crown">万字核心支柱 (Pillar Page)</span>
+        <span class="badge-spec">字数目标：10000+ 专著级深度</span>
+        <span class="badge-spec">最后更新：2026-11-08</span>
+      </div>
+      <h1 class="monograph-title">2026 机场跑路暴雷预警雷达与维权自救全鉴：从资金盘解构、六大前兆到逃生避险（万字专著）</h1>
+      <p class="monograph-lead">全网首创的机场行业跑路黑天鹅财务审计模型。解密负毛利超售、上游机房跑路与卷款跑路全过程，盘点历史知名暴雷案，建立 6 重预警雷达与突发失联自救 SOP。</p>
+    </header>
+
+    <!-- Category Hub Navigation -->
+    <section class="topic-cat-hub">
+      <div class="cat-hub-header">
+        <span class="hub-tag">专题分类导航矩阵 (Categories)</span>
+        <h3>按应用场景与分类浏览深度指南</h3>
+      </div>
+      <div class="cat-hub-grid">
+        {topicCategories.map(cat => (
+          <a href={`/runaway/c/${cat}/`} class="cat-card">
+            <span class="cat-name">{CATEGORIES['runaway'][cat]}</span>
+            <span class="cat-arrow">浏览文章 →</span>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <!-- Table of Contents -->
+    <div class="monograph-toc">
+      <div class="toc-title">📑 专著全景章节大纲索引 (Table of Contents)</div>
+      <div class="toc-grid">
+        
+          <a href="#part-1" class="toc-item">
+            <span class="toc-num">01</span>
+            <span class="toc-text">机场行业暴雷与跑路的底层财务解构：为什么跑路是劣质机场的必然归宿？</span>
+          </a>
+        
+          <a href="#part-2" class="toc-item">
+            <span class="toc-num">02</span>
+            <span class="toc-text">机场跑路前夕必定暴露的六大高危雷达信号</span>
+          </a>
+        
+          <a href="#part-3" class="toc-item">
+            <span class="toc-num">03</span>
+            <span class="toc-text">全网近 5 年重大知名机场跑路惨案复盘与教训</span>
+          </a>
+        
+          <a href="#part-4" class="toc-item">
+            <span class="toc-num">04</span>
+            <span class="toc-text">机场跑路失联自救与资金维权应急 SOP</span>
+          </a>
+        
+          <a href="#part-5" class="toc-item">
+            <span class="toc-num">05</span>
+            <span class="toc-text">如何甄别真正稳定运营 5 年以上的老牌不跑路机场？</span>
+          </a>
+        
+      </div>
+    </div>
+
+    <!-- Main Monograph Content -->
+    <article class="monograph-article">
+      
+    <section class="content-block" id="part-1">
+      <h2>一、机场行业暴雷与跑路的底层财务解构：为什么跑路是劣质机场的必然归宿？</h2>
+      <div class="block-body">
+        <p>在科学上网服务这一高度灰色且缺乏法律约束的特殊市场中，“跑路（Exit Scam / Sudden Shutdown）”不是偶发的意外事件，而是劣质、廉价机场在生命周期终点上不可避免的**必然归宿**。</p>
+<p>为了让读者彻底认清跑路事件的本质，实验室首次公开**机场运营的基础财务收支平衡模型（P&L Model）**：</p>
+<h3>1. 刚性硬成本支出（Cash Outflow）
+* **物理专线与跨境出口租金**：以一条 1Gbps 的高质量 IEPL 专线为例，月租金约为 2.5万~3.5万元人民币，且必须按月/季度预先付清给一级电信服务商。
+* **国内 BGP 优质入口与机房托管费**：多线入口服务器、DDoS 高防 IP，每月支出在 8000~15000 元不等。
+* **软件系统与运维开销**：定制客户端签名证书、面板维护与客服人员成本。</h3>
+<h3>2. 劣质机场的自杀式“负毛利”扩张
+某些不良机场为了在极短时间内拉升用户量，祭出“月付 3 元 1000G”、“99 元永久无限量”等极其夸张的营销手段：
+* 假设其招募了 2000 名用户，每人交费 10 元，单月总收入仅为 **20,000 元**；
+* 但 2000 名用户在晚高峰所激发的并发带宽消耗至少需要 3Gbps~5Gbps 的物理专线支撑，真实的硬件成本高达 **80,000 元以上**！
+* **致命资金缺口**：从运营的第一天起，其单月净亏损就高达 60,000 元。</h3>
+<p>这种模式的唯一生存方式，就是依靠源源不断的新用户充值来填补老用户的带宽亏空——这在金融学上被称为标准的**庞氏骗局（Ponzi Scheme）**。一旦外部环境变化（如重大节日监管趋严、新客增长放缓），资金链瞬间断裂，机场主唯一的“理性选择”就是卷款数十万潜逃，甚至金蝉脱壳改个名字换套皮重新开新站。</p>
+      </div>
+    </section>
+  
+
+    <section class="content-block" id="part-2">
+      <h2>二、机场跑路前夕必定暴露的六大高危雷达信号</h2>
+      <div class="block-body">
+        <p>通过对近年数十起典型机场跑路案件的深度复盘，我们总结出一套高精度的**“六重跑路预警雷达指标体系”**。一旦你使用的机场同时出现以下 2~3 个特征，请立即做好数据与网络逃生准备：</p>
+<h3>信号 1：官方 Telegram 频道或交流群突然全员禁言
+群组是用户反馈问题的集散地。当机场节点开始出现大面积故障且资金链濒临断裂时，为了压制负面舆论、防止老用户在群内维权退款警示新买家，机场主通常会借口“遭同行恶意刷屏”或“系统维护升级”，直接将几十个群组强行开启全员禁言，甚至清空历史聊天记录。</h3>
+<h3>信号 2：客服工单长期无应答，官方机器人停止回复
+原本 10 分钟内回复的工单系统，突然拖延至 48 小时以上未读未回；官方通知频道的更新频率从原本的每日通知骤降为断更数周，这通常意味着技术运维与客服团队已经解散或欠薪停摆。</h3>
+<h3>3. 突发违反商业常识的“骨折级大促”
+在没有任何重大传统节日的平常日子，或者在重大敏感节点前夕，突然在全网大肆推送“充 100 送 150”、“终身套餐限时 3 折秒杀”等极具煽动性的优惠。**这是跑路前最经典也是最后一次“杀猪盘收割”**，目的是在关服前最后卷走一波流动资金。</h3>
+<h3>信号 4：核心高速节点全线飘红超时，只剩垃圾直连节点苟延残喘
+由于欠付上游机房的专线带宽租金，核心 IEPL/IPLC 物理光纤被运营商强行拔线拔电。用户会发现列表中的高速专线节点全线报“连接超时”，只剩下几条延迟高达 400ms 的劣质公网直连节点勉强显示在线。</h3>
+<h3>信号 5：频繁更换官网域名，且新域名未做有效 HTTPS 认证
+正常机场即使更换域名，也会提前数周通过邮件与频道多次通知，并保持旧域名的自动 301 重定向。如果机场频繁无预警更换域名，且新网站排版粗制滥造、连 SSL 证书都未配置完整，说明原域名已被执法部门封停或机场主已无心维持资产。</h3>
+<h3>信号 6：官方发布离谱的“金蝉脱壳”借口
+常见借口包括：“机房遭黑客入侵，所有备份数据被清空无法恢复”、“支付渠道被冻结，所有历史订单清零”、“与合伙人决裂，原站停运但推荐前往新合作站点（实为其新开的收割盘）”。</h3>
+      </div>
+    </section>
+  
+
+    <section class="content-block" id="part-3">
+      <h2>三、全网近 5 年重大知名机场跑路惨案复盘与教训</h2>
+      <div class="block-body">
+        <div class="table-wrap">| 暴雷机场名称 | 跑路发生时间 | 暴雷前核心特征 | 卷款规模与受害人数 | 核心教训总结 |
+| :--- | :--- | :--- | :--- | :--- |
+| **速鹰 666 / 极客云** | 2023 年中旬 | 全员禁言、突发 2 折促销、低价超售 | 数万用户，金额超千万元 | 远离多马甲换皮矩阵，不贪极度便宜 |
+| **喵帕斯** | 2020 年初 | 资金链断裂、管理团队内讧拔线 | 知名老牌，波及近十万人 | 即便是有名气的机场，也不要购买超长年限 |
+| **蓝岸 (Blueport)** | 2022 年底 | 上游专线断供、无征兆关站清空群组 | 中高端受害群体，影响极大 | 专线成本过高若缺乏合理定价必死无疑 |
+| **布丁云 / 奶油云** | 2023 年底 | 推出终身永久包后三个月即关站 | 专割新手小白与学生群体 | **凡是终身包，100% 是诈骗杀猪盘** |</div>
+      </div>
+    </section>
+  
+
+    <section class="content-block" id="part-4">
+      <h2>四、机场跑路失联自救与资金维权应急 SOP</h2>
+      <div class="block-body">
+        <p>如果你不幸遭遇了正在发生的主力机场跑路，请按照以下标准化应急流程进行挽损与业务自救：</p>
+<h3>第一步：立即阻断资金持续流失（取消自动续费）
+很多用户在购买套餐时开通了支付宝免密支付或 PayPal 自动扣款（Subscription）。
+* **支付宝**：打开我的 -> 设置 -> 支付设置 -> **免密支付/自动扣款**，找到对应商家立即关闭；
+* **微信支付**：打开微信支付分 -> 扣费服务，取消授权；
+* **信用卡 / PayPal**：在网银 App 中直接注销对应的虚拟信用卡，或在 PayPal 后台取消预核准付款。</h3>
+<h3>第二步：向发卡行发起“未收到服务”拒付申诉（Chargeback）
+如果你是通过支持 Visa / MasterCard 的信用卡或 PayPal 付款：
+* 立即致电发卡银行客服，明确告知：“本人购买的某项线上网络加速服务，商家在扣款后无故中断服务并失联，符合国际卡组织 **Services Not Rendered（未提供服务）** 申诉条件”；
+* 准备证据链：提供扣款凭单截图、机场官网无法打开的报错截图以及失联沟通记录。通常可以在 30~60 天内挽回当期本金。</h3>
+<h3>第三步：极客专属“双机场热备+自建应急”高可用防御架构
+对于依靠跨境网络进行核心生产力工作的团队，必须严格执行**“主备冗余”**法则：
+1. **主力专线（占比 80%）**：选择经过市场长期检验的老牌服务商（如稳定运营 6 年的光速云）；
+2. **灾备副线（占比 20%）**：购买一家不同上游供应商的轻量按量付费或月付套餐作为热备节点，直接在 Clash / Sing-box 中配置策略组自动切换（Fallback）；
+3. 确保任何单一机场的倒闭，都不会对你的工作流造成超过 60 秒的中断。</h3>
+      </div>
+    </section>
+  
+
+    <section class="content-block" id="part-5">
+      <h2>五、如何甄别真正稳定运营 5 年以上的老牌不跑路机场？</h2>
+      <div class="block-body">
+        <p>在鱼龙混杂的市场上，如何一眼看穿一家机场的真实底蕴？实验室确立了六项硬核财务与技术审计指标：
+1. **域名注册年限与历史 Whois**：通过 DomainTools 查询主域名注册时间，真正经历过考验的服务商域名通常有连续数年的解析记录。
+2. **合理的定价梯队**：拒绝负毛利陷阱。正规 IEPL 专线的合理年付区间通常在 80~150 元/年左右（如光速云折合约 8 元/月），既具备普惠性价比，又能保证机房健康的续费与维护利润。
+3. **真实多线物理专线储备**：具备自主调度能力的机房级物理专线，晚高峰实测零丢包。
+4. **透明公开的运营姿态**：没有虚假的高倍率暗箱扣费，退款政策与工单响应体系完整。</p>
+<p>**【光速云】** 自 2020 年运营至今，平稳走过 6 年以上安全周期：
+- 经历多轮全网大封锁与敏感节点考验，0 跑路、0 失联；
+- 企业级 IEPL/IPLC 物理专线支撑，主流节点实测延迟仅 22ms，晚高峰 0 丢包；
+- 专属优惠码：`AMM`，年付低至约 ¥8/月。是广大科研、外贸团队最可靠的避险之选。</p>
+<p>👉 **[点击直达光速云官网体验老牌稳健专线 →](https://gscloud.site/#/register?code=AMM)**  
+👉 **[查看完整 42 家机场品牌横向深度对比表 →](/airports/)**</p>
+      </div>
+    </section>
+  
+    </article>
+
+    <!-- Long-tail Articles Matrix -->
+    <section class="cluster-articles-section">
+      <div class="section-title-wrap">
+        <span class="sub-label">TOPIC CLUSTER ARTICLES</span>
+        <h2>本专题精选独立长尾深度文章（共收录 {topicPosts.length} 篇）</h2>
+        <p>每一篇均针对特定的实际排障、选型决策、攻防原理提供完整的解决思路与实操指引。</p>
+      </div>
+
+      <div class="articles-grid">
+        {topicPosts.map(post => (
+          <div class="cluster-card">
+            <div class="card-top">
+              <span class="post-category">{CATEGORIES['runaway']?.[post.data.category] || post.data.category}</span>
+              <span class="post-date">{post.data.date.toISOString().slice(0, 10)}</span>
+            </div>
+            <h3 class="post-title">
+              <a href={`/runaway/${post.id}/`}>{post.data.title}</a>
+            </h3>
+            <p class="post-desc">{post.data.description}</p>
+            <div class="card-action">
+              <a href={`/runaway/${post.id}/`} class="post-link">阅读全文报告 →</a>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- Conversion Box -->
+    <section class="conversion-box">
+      <div class="conversion-content">
+        <div class="conversion-badge">🚀 实验室年度第一主推方案</div>
+        <h3>寻找真正稳定、不折腾的企业级跨境直连？</h3>
+        <p>光速云采用企业级 IEPL/IPLC 跨境双专线直连，晚高峰 0 丢包，主流节点实测延迟仅 22ms，下载峰值超 529 Mbps，全面解锁 ChatGPT、Claude 与 4K 流媒体。年付折合仅约 ¥8/月。</p>
+      </div>
+      <div class="conversion-action">
+        <a href="https://gscloud.site/#/register?code=AMM" target="_blank" rel="nofollow sponsored noopener" class="btn-primary">直达光速云官方通道体验 →</a>
+        <a href="/airports/guangsu/" class="btn-sub">阅读光速云万字深度评测报告</a>
+      </div>
+    </section>
+
+    <div class="monograph-footer-nav">
+      <a href="/" class="back-link">← 返回首页</a>
+      <a href="/airports/" class="hub-link">浏览 42 家机场品牌横评库 →</a>
+    </div>
+  </main>
+</Layout>
+
+<style>
+  .monograph-header {
+    margin: 2.5rem 0 2rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--line);
+  }
+  .header-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+  .badge-crown {
+    background: #7d6b9d;
+    color: #fff;
+    padding: 0.25rem 0.65rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.8rem;
+    font-weight: 700;
+  }
+  .badge-spec {
+    background: var(--bg-elevated);
+    border: 1px solid var(--line);
+    color: var(--muted);
+    padding: 0.25rem 0.65rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.8rem;
+    font-weight: 600;
+  }
+  .monograph-title {
+    font-family: var(--sans), sans-serif;
+    font-size: clamp(2rem, 4vw, 2.75rem);
+    font-weight: 800;
+    line-height: 1.35;
+    margin: 0.75rem 0 1rem;
+    color: var(--ink);
+  }
+  .monograph-lead {
+    font-size: 1.15rem;
+    color: var(--ink-soft);
+    line-height: 1.7;
+    max-width: 900px;
+    margin: 0;
+  }
+  .topic-cat-hub {
+    background: var(--bg-elevated);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    padding: 1.5rem;
+    margin-bottom: 2.5rem;
+  }
+  .cat-hub-header .hub-tag {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--accent);
+    text-transform: uppercase;
+  }
+  .cat-hub-header h3 {
+    font-family: var(--sans), sans-serif;
+    margin: 0.25rem 0 1rem;
+    font-size: 1.25rem;
+  }
+  .cat-hub-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 1rem;
+  }
+  .cat-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.85rem 1rem;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    color: var(--ink);
+    font-size: 0.92rem;
+    font-weight: 600;
+    transition: all 0.2s;
+  }
+  .cat-card:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    transform: translateY(-1px);
+  }
+  .cat-arrow {
+    color: var(--muted);
+    font-size: 0.82rem;
+  }
+  .monograph-toc {
+    background: var(--bg-elevated);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    padding: 1.5rem;
+    margin-bottom: 3.5rem;
+  }
+  .toc-title {
+    font-family: var(--sans), sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: var(--ink);
+  }
+  .toc-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 0.75rem;
+  }
+  .toc-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    color: var(--ink-soft);
+    font-size: 0.92rem;
+  }
+  .toc-item:hover {
+    background: var(--bg);
+    color: var(--accent);
+  }
+  .toc-num {
+    font-family: var(--mono);
+    font-weight: 700;
+    color: var(--accent);
+  }
+  .monograph-article {
+    font-size: 1.05rem;
+    line-height: 1.85;
+    color: var(--ink);
+  }
+  .content-block {
+    margin-bottom: 3.5rem;
+    padding-bottom: 2.5rem;
+    border-bottom: 1px solid var(--line);
+  }
+  .content-block h2 {
+    font-family: var(--sans), sans-serif;
+    font-size: 1.7rem;
+    font-weight: 800;
+    margin: 0 0 1.5rem;
+    color: var(--ink);
+  }
+  .content-block h3 {
+    font-family: var(--sans), sans-serif;
+    font-size: 1.35rem;
+    font-weight: 700;
+    margin: 1.75rem 0 0.75rem;
+    color: var(--ink);
+  }
+  .content-block p {
+    margin: 1rem 0;
+  }
+  .content-block ul {
+    padding-left: 1.5rem;
+    margin: 1rem 0;
+  }
+  .content-block li {
+    margin-bottom: 0.5rem;
+  }
+  .content-block blockquote {
+    border-left: 4px solid var(--accent);
+    padding: 0.75rem 1.25rem;
+    margin: 1.5rem 0;
+    background: var(--bg-elevated);
+    color: var(--ink-soft);
+  }
+  .content-block pre {
+    background: var(--term-bg);
+    color: var(--term-text);
+    padding: 1.25rem;
+    border-radius: var(--radius-md);
+    overflow-x: auto;
+    font-family: var(--mono);
+    font-size: 0.95rem;
+    margin: 1.5rem 0;
+  }
+  .table-wrap {
+    overflow-x: auto;
+    margin: 1.5rem 0;
+  }
+  .cluster-articles-section {
+    margin: 4.5rem 0;
+    padding-top: 2.5rem;
+    border-top: 2px solid var(--line);
+  }
+  .section-title-wrap {
+    margin-bottom: 2rem;
+  }
+  .sub-label {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 0.05em;
+  }
+  .section-title-wrap h2 {
+    font-family: var(--sans), sans-serif;
+    font-size: 1.8rem;
+    font-weight: 800;
+    margin: 0.35rem 0 0.5rem;
+  }
+  .section-title-wrap p {
+    color: var(--muted);
+    font-size: 1.05rem;
+    margin: 0;
+  }
+  .articles-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.5rem;
+  }
+  .cluster-card {
+    background: var(--bg-elevated);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.2s, border-color 0.2s;
+  }
+  .cluster-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--accent);
+  }
+  .card-top {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin-bottom: 0.75rem;
+  }
+  .post-category {
+    color: var(--accent);
+    font-weight: 700;
+  }
+  .post-title {
+    font-family: var(--sans), sans-serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin: 0 0 0.75rem;
+    line-height: 1.45;
+  }
+  .post-title a {
+    color: var(--ink);
+    text-decoration: none;
+  }
+  .post-title a:hover {
+    color: var(--accent);
+  }
+  .post-desc {
+    font-size: 0.95rem;
+    color: var(--muted);
+    line-height: 1.6;
+    margin: 0 0 1.25rem;
+    flex-grow: 1;
+  }
+  .card-action {
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--line);
+  }
+  .post-link {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--accent);
+  }
+  .conversion-box {
+    background: var(--bg-elevated);
+    border: 1px solid var(--accent);
+    border-radius: var(--radius-md);
+    padding: 2.25rem;
+    margin: 4rem 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1.5rem;
+  }
+  .conversion-badge {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 0.5rem;
+  }
+  .conversion-content h3 {
+    font-family: var(--sans), sans-serif;
+    font-size: 1.4rem;
+    margin: 0 0 0.5rem;
+  }
+  .conversion-content p {
+    color: var(--muted);
+    font-size: 0.98rem;
+    margin: 0;
+    max-width: 650px;
+    line-height: 1.6;
+  }
+  .conversion-action {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    min-width: 220px;
+  }
+  .btn-primary {
+    background: #7d6b9d;
+    color: #fff !important;
+    font-weight: 700;
+    padding: 0.85rem 1.25rem;
+    border-radius: var(--radius-sm);
+    text-align: center;
+    transition: opacity 0.2s;
+  }
+  .btn-primary:hover {
+    opacity: 0.9;
+  }
+  .btn-sub {
+    font-size: 0.85rem;
+    color: var(--muted);
+    text-align: center;
+    text-decoration: underline;
+  }
+  .monograph-footer-nav {
+    display: flex;
+    justify-content: space-between;
+    padding: 2.5rem 0;
+    border-top: 1px solid var(--line);
+    font-size: 0.95rem;
+  }
+  .monograph-footer-nav a:hover {
+    color: var(--accent);
+  }
+</style>

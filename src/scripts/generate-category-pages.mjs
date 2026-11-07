@@ -1,0 +1,195 @@
+import fs from 'fs';
+import path from 'path';
+
+const topics = ['free', 'tools', 'faq', 'runaway'];
+const names = {
+  free: '免费资源',
+  tools: '梯子工具',
+  faq: '机场FAQ',
+  runaway: '跑路预警'
+};
+
+function getCategoryTemplate(topic) {
+  const topicName = names[topic];
+  return `---
+import Layout from '../../../components/Layout.astro';
+import { getCollection } from 'astro:content';
+import { CATEGORIES } from '../../../lib/topics';
+
+export async function getStaticPaths() {
+  const allPosts = await getCollection('${topic}');
+  const topicCategories = Object.keys(CATEGORIES['${topic}'] || {});
+  
+  return topicCategories.map(cat => ({
+    params: { category: cat },
+    props: {
+      categorySlug: cat,
+      categoryTitle: CATEGORIES['${topic}'][cat],
+      posts: allPosts.filter(p => p.data.category === cat)
+    }
+  }));
+}
+
+const { categorySlug, categoryTitle, posts } = Astro.props;
+const topicName = '${topicName}';
+---
+
+<Layout title={\`\${categoryTitle} - \${topicName} - 机场homes\`} description={\`\${topicName}下的\${categoryTitle}分类，收录精选专业深度指南与评测文章。\`}>
+  <main class="content-shell">
+    <nav class="breadcrumb-nav" aria-label="Breadcrumb">
+      <a href="/">首页</a>
+      <span class="separator">/</span>
+      <a href="/${topic}/">\${topicName}</a>
+      <span class="separator">/</span>
+      <span class="current">{categoryTitle}</span>
+    </nav>
+
+    <header class="category-hero">
+      <span class="hero-tag">分类专栏</span>
+      <h1 class="category-title">{categoryTitle}</h1>
+      <p class="category-desc">精选关于 {categoryTitle} 的深度技术分析、测评避坑与实战指引（共收录 {posts.length} 篇核心文章）。</p>
+    </header>
+
+    <div class="posts-grid">
+      {posts.map(post => (
+        <article class="post-card">
+          <div class="card-meta">
+            <span class="card-date">{post.data.date.toISOString().slice(0, 10)}</span>
+          </div>
+          <h2 class="card-title">
+            <a href={\`/${topic}/\${post.id}/\`}>{post.data.title}</a>
+          </h2>
+          <p class="card-excerpt">{post.data.description}</p>
+          <div class="card-tags">
+            {post.data.tags.map(t => (
+              <span class="tag">#{t}</span>
+            ))}
+          </div>
+          <div class="card-action">
+            <a href={\`/${topic}/\${post.id}/\`} class="read-more">阅读深度报告 →</a>
+          </div>
+        </article>
+      ))}
+    </div>
+
+    <div class="category-footer">
+      <a href="/${topic}/" class="btn-back">← 返回全部 \${topicName} 知识库</a>
+    </div>
+  </main>
+</Layout>
+
+<style>
+  .category-hero {
+    margin: 2.5rem 0 3rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--line);
+  }
+  .hero-tag {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .category-title {
+    font-family: var(--sans), sans-serif;
+    font-size: clamp(2rem, 4vw, 2.75rem);
+    font-weight: 800;
+    margin: 0.5rem 0 1rem;
+    color: var(--ink);
+  }
+  .category-desc {
+    font-size: 1.1rem;
+    color: var(--muted);
+    line-height: 1.6;
+    max-width: 800px;
+    margin: 0;
+  }
+  .posts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 4rem;
+  }
+  .post-card {
+    background: var(--bg-elevated);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+  }
+  .post-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--accent);
+  }
+  .card-meta {
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin-bottom: 0.5rem;
+  }
+  .card-title {
+    font-family: var(--sans), sans-serif;
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin: 0 0 0.75rem;
+    line-height: 1.4;
+  }
+  .card-title a {
+    color: var(--ink);
+    text-decoration: none;
+  }
+  .card-title a:hover {
+    color: var(--accent);
+  }
+  .card-excerpt {
+    font-size: 0.95rem;
+    color: var(--muted);
+    line-height: 1.6;
+    margin-bottom: 1rem;
+    flex-grow: 1;
+  }
+  .card-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-bottom: 1rem;
+  }
+  .tag {
+    font-size: 0.8rem;
+    color: var(--muted);
+    background: var(--bg);
+    padding: 0.15rem 0.4rem;
+    border-radius: var(--radius-sm);
+  }
+  .card-action {
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--line);
+  }
+  .read-more {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--accent);
+  }
+  .category-footer {
+    padding: 2rem 0;
+    border-top: 1px solid var(--line);
+  }
+  .btn-back {
+    color: var(--muted);
+    font-weight: 600;
+  }
+  .btn-back:hover {
+    color: var(--accent);
+  }
+</style>
+`;
+}
+
+topics.forEach(t => {
+  const content = getCategoryTemplate(t);
+  const targetPath = path.join(process.cwd(), 'src/pages', t, 'c', '[category].astro');
+  fs.writeFileSync(targetPath, content, 'utf8');
+  console.log('Created: ' + targetPath);
+});

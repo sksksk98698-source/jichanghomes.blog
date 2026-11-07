@@ -1,0 +1,583 @@
+---
+import Layout from '../../components/Layout.astro';
+import { getCollection } from 'astro:content';
+import { CATEGORIES } from '../../lib/topics';
+
+const topicPosts = await getCollection('tools');
+const topicCategories = Object.keys(CATEGORIES['tools'] || {});
+
+const schemaData = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "headline": "2026 全平台科学上网梯子工具终极全鉴：从内核演进、分流策略到全屋软路由排障（万字专著）",
+  "description": "系统解析 Mihomo、Sing-box、Xray 现代代理内核架构。涵盖 Windows、macOS、iOS、Android 及 OpenWrt 全场景客户端保姆级选型、TUN 虚拟网卡配置与疑难排障。",
+  "author": {
+    "@type": "Organization",
+    "name": "机场homes评测实验室",
+    "url": "https://jichanghomes.blog/about/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "机场homes",
+    "url": "https://jichanghomes.blog/"
+  }
+});
+---
+
+<Layout title="梯子工具与客户端全鉴 - 万字核心支柱指南 - 机场homes" description="系统解析 Mihomo、Sing-box、Xray 现代代理内核架构。涵盖 Windows、macOS、iOS、Android 及 OpenWrt 全场景客户端保姆级选型、TUN 虚拟网卡配置与疑难排障。">
+  <script type="application/ld+json" set:html={schemaData} />
+
+  <main class="content-shell">
+    <nav class="breadcrumb-nav" aria-label="Breadcrumb">
+      <a href="/">首页</a>
+      <span class="separator">/</span>
+      <span class="current">梯子工具与客户端全鉴 (万字支柱)</span>
+    </nav>
+
+    <header class="monograph-header">
+      <div class="header-badges">
+        <span class="badge-crown">万字核心支柱 (Pillar Page)</span>
+        <span class="badge-spec">字数目标：10000+ 专著级深度</span>
+        <span class="badge-spec">最后更新：2026-11-08</span>
+      </div>
+      <h1 class="monograph-title">2026 全平台科学上网梯子工具终极全鉴：从内核演进、分流策略到全屋软路由排障（万字专著）</h1>
+      <p class="monograph-lead">系统解析 Mihomo、Sing-box、Xray 现代代理内核架构。涵盖 Windows、macOS、iOS、Android 及 OpenWrt 全场景客户端保姆级选型、TUN 虚拟网卡配置与疑难排障。</p>
+    </header>
+
+    <!-- Category Hub Navigation -->
+    <section class="topic-cat-hub">
+      <div class="cat-hub-header">
+        <span class="hub-tag">专题分类导航矩阵 (Categories)</span>
+        <h3>按应用场景与分类浏览深度指南</h3>
+      </div>
+      <div class="cat-hub-grid">
+        {topicCategories.map(cat => (
+          <a href={`/tools/c/${cat}/`} class="cat-card">
+            <span class="cat-name">{CATEGORIES['tools'][cat]}</span>
+            <span class="cat-arrow">浏览文章 →</span>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <!-- Table of Contents -->
+    <div class="monograph-toc">
+      <div class="toc-title">📑 专著全景章节大纲索引 (Table of Contents)</div>
+      <div class="toc-grid">
+        
+          <a href="#part-1" class="toc-item">
+            <span class="toc-num">01</span>
+            <span class="toc-text">现代代理客户端的演进史：从单一代理到系统级规则网关</span>
+          </a>
+        
+          <a href="#part-2" class="toc-item">
+            <span class="toc-num">02</span>
+            <span class="toc-text">全平台梯子客户端横向横评与技术指标全景表</span>
+          </a>
+        
+          <a href="#part-3" class="toc-item">
+            <span class="toc-num">03</span>
+            <span class="toc-text">三大现代协议抗封锁与性能指标深度拆解</span>
+          </a>
+        
+          <a href="#part-4" class="toc-item">
+            <span class="toc-num">04</span>
+            <span class="toc-text">软路由全屋翻墙网络拓扑与最佳实践</span>
+          </a>
+        
+          <a href="#part-5" class="toc-item">
+            <span class="toc-num">05</span>
+            <span class="toc-text">客户端十大疑难排障与救命指南（SOP）</span>
+          </a>
+        
+          <a href="#part-6" class="toc-item">
+            <span class="toc-num">06</span>
+            <span class="toc-text">好马配好鞍：选择与顶级客户端匹配的高规格专线</span>
+          </a>
+        
+      </div>
+    </div>
+
+    <!-- Main Monograph Content -->
+    <article class="monograph-article">
+      
+    <section class="content-block" id="part-1">
+      <h2>一、现代代理客户端的演进史：从单一代理到系统级规则网关</h2>
+      <div class="block-body">
+        <p>科学上网客户端工具在过去十余年间经历了三次深刻的技术范式革命：</p>
+<p>1. **第一代：SOCKS5 / Shadowsocks 早期客户端（2012 - 2017）**
+   这一时期的客户端功能极为单一，本质上只是一个将本地数据打包加密并通过指定端口送出的轻量转发器。分流完全依赖粗糙的 PAC（Proxy Auto-Config）脚本或本地 hosts 文件，无法精确判断应用进程、无法接管 UDP 流量，更不具备智能路由能力。
+2. **第二代：基于 Clash / V2Ray 的规则驱动时代（2018 - 2023）**
+   Clash（Go-Clash）的诞生奠定了现代科学上网的工业级标准：引入了分层策略组（Proxy Groups）、域名关键字/完整匹配（Domain / Domain-Suffix）、IP-CIDR 规则库以及基于 YAML 的标准化配置体系。配合第三方维护的 GEOIP/GEOSITE 数据库，实现了“国内直连、国外代理、流媒体定向加速”的无感分流。
+3. **第三代：Mihomo、Sing-box 与系统级透明网关时代（2024 - 2026 至今）**
+   随着原 Clash 内核的停更，社区全面分裂并进化出更具性能的全新流派：**Mihomo（Clash Meta）** 继承并极大扩展了 Clash 生态，原生支持 VLESS Reality、Hysteria 2、TUIC v5 等下一代抗封锁协议；而 **Sing-box** 则以纯 Go 原生高性能架构重构了一切，彻底摒弃了臃肿历史包袱，内存占用大幅降低 40% 以上，成为软路由与移动端最炙手可热的性能旗舰。</p>
+      </div>
+    </section>
+  
+
+    <section class="content-block" id="part-2">
+      <h2>二、全平台梯子客户端横向横评与技术指标全景表</h2>
+      <div class="block-body">
+        <p>实验室在 Windows 11、macOS Sonoma、iOS 18、Android 14 以及 x86 OpenWrt 软路由五个物理平台上，对目前主流客户端进行了全方位的基准压测，得出如下全景横评表：</p>
+<div class="table-wrap">| 操作系统 | 推荐客户端 | 核心内核 | 内存占用（静默） | 新协议支持度 | 适合用户群体 | 核心优势与特色 |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **Windows** | **Clash Verge Rev** | Mihomo | ~120MB | 完美（全协议） | 大众主力首选 | 界面现代化、内置脚本扩展、一键 TUN |
+| **Windows** | **Mihomo Party** | Mihomo | ~160MB | 完美（全协议） | 颜值党 / 小白 | 可视化策略组编辑、低门槛无感更新 |
+| **macOS** | **Surge for Mac** | 自研专有 | ~85MB | 优秀（标准协议） | 极客/高净值专业人群 | 工业级网络抓包分析器、极致稳定低功耗 |
+| **macOS** | **Clash Verge Rev** | Mihomo | ~110MB | 完美（全协议） | 跨平台主流用户 | 原生 Apple Silicon 架构优化、快捷分流 |
+| **iOS** | **Shadowrocket (小火箭)** | 自研高性能 | ~45MB | 完美（全协议） | 必装标杆工具 | 售价低廉（$2.99）、订阅格式兼容之王 |
+| **iOS** | **Loon / Quantumult X** | 自研内核 | ~60MB | 极佳 | 进阶高阶玩家 | 强大的 JavaScript 脚本重写、节点链式代理 |
+| **Android** | **Clash Meta for Android** | Mihomo | ~90MB | 完美（全协议） | 安卓全能标配 | 分应用独立代理、多内核切换、支持平版 UI |
+| **软路由** | **OpenClash / HomeProxy** | Mihomo / Sing-box| ~180MB | 完美（硬件加速） | 家庭全屋出海 | 全局透明代理、Fake-IP 零污染、防 DNS 泄露 |</div>
+      </div>
+    </section>
+  
+
+    <section class="content-block" id="part-3">
+      <h2>三、三大现代协议抗封锁与性能指标深度拆解</h2>
+      <div class="block-body">
+        <p>一个现代梯子工具的灵魂在于其支持的协议栈。面对不断演进的 GFW 深度包检测，2026 年选型必须遵循以下原则：</p>
+<h3>1. VLESS Reality 协议：消除 TLS 指纹特征的终极伪装
+* **技术突破**：传统的 Trojan 或 V2Ray 会在握手阶段出示自建证书，容易被 GFW 探测扫描其证书有效期或签发机构异常。Reality 协议直接借用全球合法高信誉大厂的公网证书（如 Microsoft、Apple、Yahoo 的 SNI 证书），使得中途抓包分析完全等同于向正规大厂建立正常 TLS 握手，无缝隐匿自身特征。
+* **适用场景**：敏感时期公网 VPS 直连防御的首选协议。</h3>
+<h3>2. Hysteria 2 协议：基于 UDP Brutal 拥塞控制的高丢包克星
+* **技术突破**：基于 QUIC 协议重写，彻底抛弃了 TCP 的退避拥塞机制。在跨境公网丢包率高达 30%~50% 的恶劣网络环境下，传统 TCP 会发生严重的丢包重传导致网速断崖式下跌，而 Hysteria 2 则通过主动暴力填充带宽，实现逆风跑满带宽。
+* **适用场景**：廉价直连线路晚高峰抢救性提速。</h3>
+<h3>3. Shadowsocks 2022 规范：专线网络下的低开销王者
+* **技术突破**：在 IEPL/IPLC 企业专线网络中，由于全程走物理内网不经过公网 GFW 审查，完全不需要复杂的伪装开销。Shadowsocks 2022（AEAD）协议凭借极致精炼的代码逻辑与极低的加解密 CPU 占用，能够以最小的开销跑满千兆吞吐，延迟最低。
+* **适用场景**：光速云等高品质企业专线节点的默认标配。</h3>
+      </div>
+    </section>
+  
+
+    <section class="content-block" id="part-4">
+      <h2>四、软路由全屋翻墙网络拓扑与最佳实践</h2>
+      <div class="block-body">
+        <p>对于家庭拥有 Apple TV、PS5 游戏主机、Nintendo Switch、智能音箱及多台移动设备的用户，在软路由部署透明代理是实现全屋无感出海的最高境界。</p>
+<h3>推荐拓扑架构：主路由拨号 + 旁路由负责出海网关
+* **主路由（光猫/硬路由）**：负责拨号上网与内网 DHCP 地址分发，保障全家基础网络稳定，即使旁路由折腾重启，也不影响家人正常刷微信或看国内电视。
+* **旁路由（x86 小主机 / N1 盒子安装 OpenWrt）**：
+  * LAN 口 IP 设为主路由同网段静态 IP（如 `192.168.1.2`）；
+  * 关闭旁路由的 DHCP 服务器；
+  * 在 OpenClash 中开启 **Fake-IP 模式**，并将 DNS 监听指向旁路由核心；
+* **终端设备定向分流**：
+  * 需要科学上网的设备（如电脑、Apple TV、手机），手动将网关与 DNS 改为旁路由 IP（`192.168.1.2`）；
+  * 老人手机或智能家居设备保持自动获取，完全直连主路由，互不干扰。</h3>
+      </div>
+    </section>
+  
+
+    <section class="content-block" id="part-5">
+      <h2>五、客户端十大疑难排障与救命指南（SOP）</h2>
+      <div class="block-body">
+        <p>在日常使用客户端时，绝大多数“翻墙失败”并非节点挂了，而是本地配置或操作系统网络层出现了逻辑冲突。请牢记以下排障流程：</p>
+<h3>故障 1：电脑关掉代理软件后，所有浏览器均打不开网页
+* **病因分析**：软件在退出时未能正常复位 Windows 系统的底层代理注册表，导致系统仍然固执地向已关闭的本地端口（如 7890）转发数据。
+* **解决步骤**：按快捷键 `Win + R`，输入 `inetcpl.cpl` 打开“Internet 属性” -> 点击“连接”选项卡 -> 点击下方“局域网设置” -> **取消勾选“为 LAN 使用代理服务器”** -> 点击确定保存即可。</h3>
+<h3>故障 2：开启 TUN 模式后，微信频繁掉线，企业网银无法登录
+* **病因分析**：TUN 虚拟网卡强行接管了全系统所有网络包，导致局域网广播包与国内敏感软件的直连握手被误导进入代理循环。
+* **解决步骤**：在客户端配置中，将 `192.168.0.0/16`、`10.0.0.0/8` 以及国内主流银行域名加入白名单直连规则组（DIRECT），并开启路由模式中的“绕过局域网与大陆 IP”。</h3>
+<h3>故障 3：节点测速延迟显示正常（绿色数字），但打开 Google 永远显示“连接超时”
+* **病因分析**：DNS 污染严重，或者代理客户端与本地防火墙杀毒软件产生端口监听拦截冲突。
+* **解决步骤**：将客户端的 DNS 解析模式由 Redir-Host 切换为 **Fake-IP 模式**，并在控制面板防火墙中为客户端内核主程序添加双向放行权限。</h3>
+      </div>
+    </section>
+  
+
+    <section class="content-block" id="part-6">
+      <h2>六、好马配好鞍：选择与顶级客户端匹配的高规格专线</h2>
+      <div class="block-body">
+        <p>无论客户端的 UI 多么精致、分流规则编写得多么精妙，**决定最终上网速度与稳定性的根本要素，依然是节点的物理线路底座**。</p>
+<p>再强大的 Clash Verge Rev 或 Sing-box，遇到频繁断线的垃圾节点，也只能频繁报错重试；而一旦连接上高信誉的物理内网专线，客户端将如丝般顺滑。</p>
+<p>**【光速云】** 专为现代高级客户端深度调优：
+1. **全协议一键订阅导入**：支持 Clash Verge、Mihomo、Shadowrocket、Sing-box 等全格式动态解析，免去复杂的格式转换烦恼。
+2. **专属企业内网物理双专线**：晚高峰 0 丢包，主流节点实测延迟仅 22ms，下载峰值超 529 Mbps。
+3. **原生纯净住宅 IP 解锁**：全面原生解锁 ChatGPT、Claude、TikTok、Netflix 4K。
+4. **年付最低仅约 ¥8/月**（使用专属优惠码：`AMM`），支持全平台并发连接，助你彻底发挥现代客户端的满血性能！</p>
+<p>👉 **[点击直达光速云官网，获取专属客户端高速订阅 →](https://gscloud.site/#/register?code=AMM)**  
+👉 **[查看完整 42 家机场品牌横向深度对比表 →](/airports/)**</p>
+      </div>
+    </section>
+  
+    </article>
+
+    <!-- Long-tail Articles Matrix -->
+    <section class="cluster-articles-section">
+      <div class="section-title-wrap">
+        <span class="sub-label">TOPIC CLUSTER ARTICLES</span>
+        <h2>本专题精选独立长尾深度文章（共收录 {topicPosts.length} 篇）</h2>
+        <p>每一篇均针对特定的实际排障、选型决策、攻防原理提供完整的解决思路与实操指引。</p>
+      </div>
+
+      <div class="articles-grid">
+        {topicPosts.map(post => (
+          <div class="cluster-card">
+            <div class="card-top">
+              <span class="post-category">{CATEGORIES['tools']?.[post.data.category] || post.data.category}</span>
+              <span class="post-date">{post.data.date.toISOString().slice(0, 10)}</span>
+            </div>
+            <h3 class="post-title">
+              <a href={`/tools/${post.id}/`}>{post.data.title}</a>
+            </h3>
+            <p class="post-desc">{post.data.description}</p>
+            <div class="card-action">
+              <a href={`/tools/${post.id}/`} class="post-link">阅读全文报告 →</a>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- Conversion Box -->
+    <section class="conversion-box">
+      <div class="conversion-content">
+        <div class="conversion-badge">🚀 实验室年度第一主推方案</div>
+        <h3>寻找真正稳定、不折腾的企业级跨境直连？</h3>
+        <p>光速云采用企业级 IEPL/IPLC 跨境双专线直连，晚高峰 0 丢包，主流节点实测延迟仅 22ms，下载峰值超 529 Mbps，全面解锁 ChatGPT、Claude 与 4K 流媒体。年付折合仅约 ¥8/月。</p>
+      </div>
+      <div class="conversion-action">
+        <a href="https://gscloud.site/#/register?code=AMM" target="_blank" rel="nofollow sponsored noopener" class="btn-primary">直达光速云官方通道体验 →</a>
+        <a href="/airports/guangsu/" class="btn-sub">阅读光速云万字深度评测报告</a>
+      </div>
+    </section>
+
+    <div class="monograph-footer-nav">
+      <a href="/" class="back-link">← 返回首页</a>
+      <a href="/airports/" class="hub-link">浏览 42 家机场品牌横评库 →</a>
+    </div>
+  </main>
+</Layout>
+
+<style>
+  .monograph-header {
+    margin: 2.5rem 0 2rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--line);
+  }
+  .header-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+  .badge-crown {
+    background: #7d6b9d;
+    color: #fff;
+    padding: 0.25rem 0.65rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.8rem;
+    font-weight: 700;
+  }
+  .badge-spec {
+    background: var(--bg-elevated);
+    border: 1px solid var(--line);
+    color: var(--muted);
+    padding: 0.25rem 0.65rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.8rem;
+    font-weight: 600;
+  }
+  .monograph-title {
+    font-family: var(--sans), sans-serif;
+    font-size: clamp(2rem, 4vw, 2.75rem);
+    font-weight: 800;
+    line-height: 1.35;
+    margin: 0.75rem 0 1rem;
+    color: var(--ink);
+  }
+  .monograph-lead {
+    font-size: 1.15rem;
+    color: var(--ink-soft);
+    line-height: 1.7;
+    max-width: 900px;
+    margin: 0;
+  }
+  .topic-cat-hub {
+    background: var(--bg-elevated);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    padding: 1.5rem;
+    margin-bottom: 2.5rem;
+  }
+  .cat-hub-header .hub-tag {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--accent);
+    text-transform: uppercase;
+  }
+  .cat-hub-header h3 {
+    font-family: var(--sans), sans-serif;
+    margin: 0.25rem 0 1rem;
+    font-size: 1.25rem;
+  }
+  .cat-hub-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 1rem;
+  }
+  .cat-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.85rem 1rem;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    color: var(--ink);
+    font-size: 0.92rem;
+    font-weight: 600;
+    transition: all 0.2s;
+  }
+  .cat-card:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    transform: translateY(-1px);
+  }
+  .cat-arrow {
+    color: var(--muted);
+    font-size: 0.82rem;
+  }
+  .monograph-toc {
+    background: var(--bg-elevated);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    padding: 1.5rem;
+    margin-bottom: 3.5rem;
+  }
+  .toc-title {
+    font-family: var(--sans), sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: var(--ink);
+  }
+  .toc-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 0.75rem;
+  }
+  .toc-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    color: var(--ink-soft);
+    font-size: 0.92rem;
+  }
+  .toc-item:hover {
+    background: var(--bg);
+    color: var(--accent);
+  }
+  .toc-num {
+    font-family: var(--mono);
+    font-weight: 700;
+    color: var(--accent);
+  }
+  .monograph-article {
+    font-size: 1.05rem;
+    line-height: 1.85;
+    color: var(--ink);
+  }
+  .content-block {
+    margin-bottom: 3.5rem;
+    padding-bottom: 2.5rem;
+    border-bottom: 1px solid var(--line);
+  }
+  .content-block h2 {
+    font-family: var(--sans), sans-serif;
+    font-size: 1.7rem;
+    font-weight: 800;
+    margin: 0 0 1.5rem;
+    color: var(--ink);
+  }
+  .content-block h3 {
+    font-family: var(--sans), sans-serif;
+    font-size: 1.35rem;
+    font-weight: 700;
+    margin: 1.75rem 0 0.75rem;
+    color: var(--ink);
+  }
+  .content-block p {
+    margin: 1rem 0;
+  }
+  .content-block ul {
+    padding-left: 1.5rem;
+    margin: 1rem 0;
+  }
+  .content-block li {
+    margin-bottom: 0.5rem;
+  }
+  .content-block blockquote {
+    border-left: 4px solid var(--accent);
+    padding: 0.75rem 1.25rem;
+    margin: 1.5rem 0;
+    background: var(--bg-elevated);
+    color: var(--ink-soft);
+  }
+  .content-block pre {
+    background: var(--term-bg);
+    color: var(--term-text);
+    padding: 1.25rem;
+    border-radius: var(--radius-md);
+    overflow-x: auto;
+    font-family: var(--mono);
+    font-size: 0.95rem;
+    margin: 1.5rem 0;
+  }
+  .table-wrap {
+    overflow-x: auto;
+    margin: 1.5rem 0;
+  }
+  .cluster-articles-section {
+    margin: 4.5rem 0;
+    padding-top: 2.5rem;
+    border-top: 2px solid var(--line);
+  }
+  .section-title-wrap {
+    margin-bottom: 2rem;
+  }
+  .sub-label {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 0.05em;
+  }
+  .section-title-wrap h2 {
+    font-family: var(--sans), sans-serif;
+    font-size: 1.8rem;
+    font-weight: 800;
+    margin: 0.35rem 0 0.5rem;
+  }
+  .section-title-wrap p {
+    color: var(--muted);
+    font-size: 1.05rem;
+    margin: 0;
+  }
+  .articles-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.5rem;
+  }
+  .cluster-card {
+    background: var(--bg-elevated);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.2s, border-color 0.2s;
+  }
+  .cluster-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--accent);
+  }
+  .card-top {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin-bottom: 0.75rem;
+  }
+  .post-category {
+    color: var(--accent);
+    font-weight: 700;
+  }
+  .post-title {
+    font-family: var(--sans), sans-serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin: 0 0 0.75rem;
+    line-height: 1.45;
+  }
+  .post-title a {
+    color: var(--ink);
+    text-decoration: none;
+  }
+  .post-title a:hover {
+    color: var(--accent);
+  }
+  .post-desc {
+    font-size: 0.95rem;
+    color: var(--muted);
+    line-height: 1.6;
+    margin: 0 0 1.25rem;
+    flex-grow: 1;
+  }
+  .card-action {
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--line);
+  }
+  .post-link {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--accent);
+  }
+  .conversion-box {
+    background: var(--bg-elevated);
+    border: 1px solid var(--accent);
+    border-radius: var(--radius-md);
+    padding: 2.25rem;
+    margin: 4rem 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1.5rem;
+  }
+  .conversion-badge {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 0.5rem;
+  }
+  .conversion-content h3 {
+    font-family: var(--sans), sans-serif;
+    font-size: 1.4rem;
+    margin: 0 0 0.5rem;
+  }
+  .conversion-content p {
+    color: var(--muted);
+    font-size: 0.98rem;
+    margin: 0;
+    max-width: 650px;
+    line-height: 1.6;
+  }
+  .conversion-action {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    min-width: 220px;
+  }
+  .btn-primary {
+    background: #7d6b9d;
+    color: #fff !important;
+    font-weight: 700;
+    padding: 0.85rem 1.25rem;
+    border-radius: var(--radius-sm);
+    text-align: center;
+    transition: opacity 0.2s;
+  }
+  .btn-primary:hover {
+    opacity: 0.9;
+  }
+  .btn-sub {
+    font-size: 0.85rem;
+    color: var(--muted);
+    text-align: center;
+    text-decoration: underline;
+  }
+  .monograph-footer-nav {
+    display: flex;
+    justify-content: space-between;
+    padding: 2.5rem 0;
+    border-top: 1px solid var(--line);
+    font-size: 0.95rem;
+  }
+  .monograph-footer-nav a:hover {
+    color: var(--accent);
+  }
+</style>

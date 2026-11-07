@@ -11,8 +11,11 @@ const currentPath = Astro.url.pathname;
 const navLinks = [
   { href: '/', label: '首页', current: currentPath === '/' },
   { href: '/airports/', label: '机场品牌库', current: currentPath.startsWith('/airports') },
+  { href: '/free/', label: '免费资源', current: currentPath.startsWith('/free') },
+  { href: '/tools/', label: '梯子工具', current: currentPath.startsWith('/tools') },
+  { href: '/faq/', label: '机场FAQ', current: currentPath.startsWith('/faq') },
+  { href: '/runaway/', label: '跑路预警', current: currentPath.startsWith('/runaway') },
   { href: '/speedtest/', label: '测速室', current: currentPath.startsWith('/speedtest') },
-  { href: '/clients/', label: '客户端大全', current: currentPath.startsWith('/clients') },
   { href: '/blog/', label: '专题评测', current: currentPath.startsWith('/blog') },
   { href: '/about/', label: '关于声明', current: currentPath === '/about/' },
 ];

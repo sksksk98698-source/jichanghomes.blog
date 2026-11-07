@@ -1,0 +1,271 @@
+---
+import Layout from '../../components/Layout.astro';
+import { getCollection, render } from 'astro:content';
+import { CATEGORIES } from '../../lib/topics';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('runaway');
+  return posts.map(post => ({
+    params: { slug: post.id },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+const categoryName = CATEGORIES['runaway']?.[post.data.category] || post.data.category;
+const topicName = '跑路预警';
+
+const articleSchema = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "headline": post.data.title,
+  "description": post.data.description,
+  "datePublished": post.data.date.toISOString(),
+  "author": {
+    "@type": "Organization",
+    "name": "机场homes实验室",
+    "url": "https://jichanghomes.blog/about/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "机场homes",
+    "url": "https://jichanghomes.blog/"
+  }
+});
+---
+
+<Layout title={`${post.data.title} - ${topicName} - 机场homes`} description={post.data.description}>
+  <script type="application/ld+json" set:html={articleSchema} />
+
+  <main class="content-shell">
+    <nav class="breadcrumb-nav" aria-label="Breadcrumb">
+      <a href="/">首页</a>
+      <span class="separator">/</span>
+      <a href="/runaway/">${topicName}</a>
+      <span class="separator">/</span>
+      <a href={`/runaway/c/${post.data.category}/`}>{categoryName}</a>
+      <span class="separator">/</span>
+      <span class="current">正文</span>
+    </nav>
+
+    <header class="article-hero">
+      <div class="article-meta">
+        <span class="badge-spec">{categoryName}</span>
+        <span class="badge-date">{post.data.date.toISOString().slice(0, 10)}</span>
+        <span class="badge-author">{post.data.author}</span>
+      </div>
+      <h1 class="article-title">{post.data.title}</h1>
+      <p class="article-desc">{post.data.description}</p>
+      
+      {post.data.tags.length > 0 && (
+        <div class="tag-list">
+          {post.data.tags.map(tag => (
+            <a href={`/tags/${tag}/`} class="tag-item">#{tag}</a>
+          ))}
+        </div>
+      )}
+    </header>
+
+    <div class="article-content-wrap markdown-body">
+      <Content />
+    </div>
+
+    <section class="conversion-box">
+      <div class="conversion-content">
+        <div class="conversion-badge">🚀 实验室专线解决方案</div>
+        <h3>厌倦了折腾与不确定性？体验 22ms 企业级物理专线</h3>
+        <p>告别卡顿与封锁，光速云采用企业级 IEPL/IPLC 跨境直连，全程不经公网 GFW，主流节点实测延迟仅 22ms，年付折合仅约 ¥8/月。专属优惠码：<strong>AMM</strong></p>
+      </div>
+      <div class="conversion-action">
+        <a href="https://gscloud.site/#/register?code=AMM" target="_blank" rel="nofollow sponsored noopener" class="btn-primary">直达光速云官网体验 →</a>
+        <a href="/airports/guangsu/" class="btn-sub">阅读万字深度横评</a>
+      </div>
+    </section>
+
+    <div class="article-footer-nav">
+      <a href="/runaway/" class="back-to-topic">← 返回 ${topicName} 知识专题库</a>
+      <a href="/airports/" class="browse-airports">浏览 42 家机场评测 →</a>
+    </div>
+  </main>
+</Layout>
+
+<style>
+  .article-hero {
+    margin: 2rem 0 2.5rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--line);
+  }
+  .article-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: center;
+    margin-bottom: 1rem;
+    font-size: 0.85rem;
+  }
+  .badge-spec {
+    background: var(--accent-soft);
+    color: var(--accent);
+    padding: 0.2rem 0.6rem;
+    border-radius: var(--radius-sm);
+    font-weight: 700;
+  }
+  .badge-date, .badge-author {
+    color: var(--muted);
+  }
+  .article-title {
+    font-family: var(--sans), sans-serif;
+    font-size: clamp(1.8rem, 3.5vw, 2.5rem);
+    font-weight: 800;
+    line-height: 1.35;
+    margin: 0.5rem 0 1rem;
+    color: var(--ink);
+  }
+  .article-desc {
+    font-size: 1.1rem;
+    color: var(--ink-soft);
+    line-height: 1.6;
+    margin: 0 0 1.25rem;
+  }
+  .tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .tag-item {
+    font-size: 0.85rem;
+    color: var(--muted);
+    background: var(--bg-elevated);
+    padding: 0.2rem 0.5rem;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--line);
+  }
+  .tag-item:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+  }
+  .article-content-wrap {
+    font-size: 1.05rem;
+    line-height: 1.8;
+    color: var(--ink);
+    margin-bottom: 3.5rem;
+  }
+  .article-content-wrap :global(h2) {
+    font-family: var(--sans), sans-serif;
+    font-size: 1.65rem;
+    font-weight: 800;
+    margin: 2.5rem 0 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--line);
+    color: var(--ink);
+  }
+  .article-content-wrap :global(h3) {
+    font-family: var(--sans), sans-serif;
+    font-size: 1.35rem;
+    font-weight: 700;
+    margin: 1.75rem 0 0.75rem;
+    color: var(--ink);
+  }
+  .article-content-wrap :global(p) {
+    margin: 1rem 0;
+  }
+  .article-content-wrap :global(blockquote) {
+    border-left: 4px solid var(--accent);
+    padding: 0.75rem 1.25rem;
+    margin: 1.5rem 0;
+    background: var(--bg-elevated);
+    color: var(--ink-soft);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  }
+  .article-content-wrap :global(pre) {
+    background: var(--term-bg);
+    color: var(--term-text);
+    padding: 1.25rem;
+    border-radius: var(--radius-md);
+    overflow-x: auto;
+    margin: 1.5rem 0;
+    font-family: var(--mono);
+    font-size: 0.95rem;
+  }
+  .article-content-wrap :global(table) {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+    font-size: 0.95rem;
+  }
+  .article-content-wrap :global(th),
+  .article-content-wrap :global(td) {
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--line);
+    text-align: left;
+  }
+  .article-content-wrap :global(th) {
+    background: var(--bg-elevated);
+    font-weight: 700;
+  }
+  .conversion-box {
+    background: var(--bg-elevated);
+    border: 1px solid var(--accent);
+    border-radius: var(--radius-md);
+    padding: 2rem;
+    margin: 3rem 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1.5rem;
+  }
+  .conversion-badge {
+    display: inline-block;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 0.5rem;
+  }
+  .conversion-content h3 {
+    font-family: var(--sans), sans-serif;
+    margin: 0 0 0.5rem;
+    font-size: 1.35rem;
+  }
+  .conversion-content p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 0.95rem;
+    max-width: 650px;
+  }
+  .conversion-action {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    min-width: 200px;
+  }
+  .btn-primary {
+    background: #7d6b9d;
+    color: #fff !important;
+    font-weight: 700;
+    padding: 0.75rem 1.25rem;
+    border-radius: var(--radius-sm);
+    text-align: center;
+    transition: opacity 0.2s;
+  }
+  .btn-primary:hover {
+    opacity: 0.9;
+  }
+  .btn-sub {
+    font-size: 0.85rem;
+    color: var(--muted);
+    text-align: center;
+    text-decoration: underline;
+  }
+  .article-footer-nav {
+    display: flex;
+    justify-content: space-between;
+    padding-top: 2rem;
+    border-top: 1px solid var(--line);
+    font-size: 0.95rem;
+  }
+  .article-footer-nav a:hover {
+    color: var(--accent);
+  }
+</style>

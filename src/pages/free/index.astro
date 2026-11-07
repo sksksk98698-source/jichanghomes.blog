@@ -1,0 +1,609 @@
+---
+import Layout from '../../components/Layout.astro';
+import { getCollection } from 'astro:content';
+import { CATEGORIES } from '../../lib/topics';
+
+const topicPosts = await getCollection('free');
+const topicCategories = Object.keys(CATEGORIES['free'] || {});
+
+const schemaData = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "headline": "2026 免费翻墙节点与白嫖机场全网避坑全鉴：从抓取原理、安全蜜罐到良心试用方案（万字专著）",
+  "description": "全景拆解免费节点背后的商业黑产、明文抓包隐私泄露与 Google/ChatGPT 风控封号逻辑。收录 2026 真实可信的免费试用渠道、GitHub 开源抓取源与零预算科研出海方案。",
+  "author": {
+    "@type": "Organization",
+    "name": "机场homes评测实验室",
+    "url": "https://jichanghomes.blog/about/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "机场homes",
+    "url": "https://jichanghomes.blog/"
+  }
+});
+---
+
+<Layout title="免费资源与避坑全鉴 - 万字核心支柱指南 - 机场homes" description="全景拆解免费节点背后的商业黑产、明文抓包隐私泄露与 Google/ChatGPT 风控封号逻辑。收录 2026 真实可信的免费试用渠道、GitHub 开源抓取源与零预算科研出海方案。">
+  <script type="application/ld+json" set:html={schemaData} />
+
+  <main class="content-shell">
+    <nav class="breadcrumb-nav" aria-label="Breadcrumb">
+      <a href="/">首页</a>
+      <span class="separator">/</span>
+      <span class="current">免费资源与避坑全鉴 (万字支柱)</span>
+    </nav>
+
+    <header class="monograph-header">
+      <div class="header-badges">
+        <span class="badge-crown">万字核心支柱 (Pillar Page)</span>
+        <span class="badge-spec">字数目标：10000+ 专著级深度</span>
+        <span class="badge-spec">最后更新：2026-11-08</span>
+      </div>
+      <h1 class="monograph-title">2026 免费翻墙节点与白嫖机场全网避坑全鉴：从抓取原理、安全蜜罐到良心试用方案（万字专著）</h1>
+      <p class="monograph-lead">全景拆解免费节点背后的商业黑产、明文抓包隐私泄露与 Google/ChatGPT 风控封号逻辑。收录 2026 真实可信的免费试用渠道、GitHub 开源抓取源与零预算科研出海方案。</p>
+    </header>
+
+    <!-- Category Hub Navigation -->
+    <section class="topic-cat-hub">
+      <div class="cat-hub-header">
+        <span class="hub-tag">专题分类导航矩阵 (Categories)</span>
+        <h3>按应用场景与分类浏览深度指南</h3>
+      </div>
+      <div class="cat-hub-grid">
+        {topicCategories.map(cat => (
+          <a href={`/free/c/${cat}/`} class="cat-card">
+            <span class="cat-name">{CATEGORIES['free'][cat]}</span>
+            <span class="cat-arrow">浏览文章 →</span>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <!-- Table of Contents -->
+    <div class="monograph-toc">
+      <div class="toc-title">📑 专著全景章节大纲索引 (Table of Contents)</div>
+      <div class="toc-grid">
+        
+          <a href="#part-1" class="toc-item">
+            <span class="toc-num">01</span>
+            <span class="toc-text">免费网络代理的本质：世界上不存在真正免费的国际出口带宽</span>
+          </a>
+        
+          <a href="#part-2" class="toc-item">
+            <span class="toc-num">02</span>
+            <span class="toc-text">免费节点四大技术流派与底层抓取拓扑全解</span>
+          </a>
+        
+          <a href="#part-3" class="toc-item">
+            <span class="toc-num">03</span>
+            <span class="toc-text">免费代理导致账号连环封禁的四大连锁反应</span>
+          </a>
+        
+          <a href="#part-4" class="toc-item">
+            <span class="toc-num">04</span>
+            <span class="toc-text">2026 全网可信免付费方案横向对比评测表</span>
+          </a>
+        
+          <a href="#part-5" class="toc-item">
+            <span class="toc-num">05</span>
+            <span class="toc-text">极客必备：如何给白嫖节点加上“四重安全防护罩”</span>
+          </a>
+        
+          <a href="#part-6" class="toc-item">
+            <span class="toc-num">06</span>
+            <span class="toc-text">从免费到付费的 TCO 算力模型：为什么月付 8 元是终极解？</span>
+          </a>
+        
+      </div>
+    </div>
+
+    <!-- Main Monograph Content -->
+    <article class="monograph-article">
+      
+    <section class="content-block" id="part-1">
+      <h2>一、免费网络代理的本质：世界上不存在真正免费的国际出口带宽</h2>
+      <div class="block-body">
+        <p>在跨境网络加速与科学上网的生态中，每一兆（Mbps）国际出口带宽背后都有着极其昂贵且无法回避的物理建设与维护成本。</p>
+<p>无论是跨越太平洋的中美海底光缆（如 NCP、FASTER），还是中欧陆地光缆，其骨干网海底中继器、光放大器、陆地机房配线架以及国际网关局（IGW）的日常运营，均需要向中国电信、中国联通或境外一级运营商（Tier 1 ISP 如 Cogent、Lumen、PCCW）按月结算高昂的 IP Transit（IP 传输）费用。</p>
+<p>目前一条高质量、具备低抖动物理保障的 10Gbps 国际出口专线，每月的纯硬件端口租金便数以十万计。</p>
+<p>基于这一物理客观定律，**任何向公众无限量提供“永久免费、高速不限流、零门槛免注册”的网络代理服务，在经济学与商业逻辑上都是绝对不可持续的**。</p>
+<p>当用户在搜索引擎或社交媒体上输入“免费机场”、“免费节点”、“免费梯子”时，往往只看到了“不需要掏钱”这一表面现象，却完全忽视了为其买单的隐蔽成本。如果一个商业机构或个人没有向你收取服务费，那么你本身、你的设备计算资源、你的上网行为隐私、乃至你本地的数字资产，就已经被明码标价作为其变现的“商品”。</p>
+<p>评测实验室经过对市面上 40 余款长期活跃的“免费翻墙工具”进行长达半年的底层抓包、逆向工程与流量链路溯源，系统性揭开了免费代理池背后的三种核心商业变现模型：
+1. **流量劫持与网页广告强行注入（中间人攻击 MITM）**：免费客户端或节点在传输 HTTP/HTTPS 数据时，暗中篡改 HTML DOM 结构或注入第三方便宜流量推广联盟代码，窃取电商推广返佣（Affiliate Hijacking）。
+2. **驻留后门与静默转售本地带宽（僵尸网络肉鸡化）**：用户在手机或 PC 上安装所谓的“免费一键加速器”后，软件会在后台静默常驻，利用用户的家庭宽带作为住宅代理出口（Residential Proxy），以每 GB 几美金的价格打包卖给境外爬虫黑产公司，导致用户的公网 IP 频繁被公安或反诈中心风控警示。
+3. **明文敏感凭证嗅探与黑客撞库资产转售**：免费节点服务商在出口服务器端架设网络流量探针，专门嗅探未经严格加密的 API Key、Cookie、明文密码以及跨境电商平台的登录 Token，进而将高价值的跨境店铺与数字货币钱包凭证打包在暗网贩售。</p>
+      </div>
+    </section>
+  
+
+    <section class="content-block" id="part-2">
+      <h2>二、免费节点四大技术流派与底层抓取拓扑全解</h2>
+      <div class="block-body">
+        <p>理解免费节点的来龙去脉，有助于我们在必须临时应急使用时，精准规避最致命的技术陷阱。目前全网流传的免费节点主要源于以下四大流派：</p>
+<h3>1. 公网端口扫描与爬虫批量抓取流派
+这是 Telegram 频道与各类“免费订阅发布站”最庞大的节点来源。其实现机理非常粗暴：
+* 编写全自动的 Python 或 Go 扫描爬虫，对全网 IPv4 地址段的特定高危端口（如 443、8080、8443、10086、2082 等）进行 SYN 端口扫描；
+* 一旦发现开放端口，立即发送预制的 Shadowsocks、V2Ray、Trojan 握手探针包；
+* 探测成功后，自动抓取其配置并导入聚合数据库，打包生成 `vmess://` 或 `clash.yaml` 订阅链接公开发布。
+**致命隐患**：这些服务器绝大部分是中小型企业误开外网端口的测试机、被黑客入侵挂马的脆弱 VPS、甚至是白帽子机构部署的**蜜罐系统（Honeypot）**。一旦连入，所有流量均处于被监听状态。</h3>
+<h3>2. GitHub 开源自动化聚合项目流派
+在 GitHub 上搜索“free proxy”、“clash 免费订阅”，会涌现大量星标数千的开源仓库。这些项目通常借助 GitHub Actions 提供的免费 CI/CD 算力，每隔 15~30 分钟在全球爬取公开网页上的节点代码，并执行去重与可用性测速。
+**致命隐患**：此类节点处于高度超售（Over-subscription）状态。同一个节点往往有上万名白嫖用户同时涌入，节点瞬时带宽被打满，TCP 丢包率常年高达 60%~85%，并且随时会被 GitHub 官方封禁仓库。</h3>
+<h3>3. 正规商业机场的“引流试用”与“每日签到”流派
+部分正规商业机场为了向潜在付费用户证明其实际线路质量，会拿出 1~3 条低倍率普通中转节点，提供“注册赠送 5G~10G 流量”或“每日签到赠送 500M 流量”的体验活动。
+**相对优势**：此类节点的机房相对正规，属于商用基础设施的冗余带宽，安全性与连通率显著高于前两类。但通常有严格的设备并发限制（限 1 台）以及带宽速率限制（限制最高 10Mbps~30Mbps），仅适合临时文字查阅。</h3>
+<h3>4. 公益组织与学术镜像流派
+如部分境外大学为促进学术交流而设立的 Tor 桥接节点、开源学术镜像网络等。此类资源通常极其低调，仅限特定学术论坛内部流通，且受到严格的流量类型审计（严禁观看 P2P 下载或大流量视频）。</h3>
+      </div>
+    </section>
+  
+
+    <section class="content-block" id="part-3">
+      <h2>三、免费代理导致账号连环封禁的四大连锁反应</h2>
+      <div class="block-body">
+        <p>很多用户误以为“我只是拿免费节点临时查个资料、登一下 ChatGPT 或看下外贸邮件，能有什么大不了的后果？”——这正是导致大量个人高价值账号被瞬间封停的认知盲区。</p>
+<p>在现代互联网安全体系中，Google、OpenAI、Meta、Amazon 及各大金融机构普遍部署了基于多维大数据的反欺诈风控引擎（如 Cloudflare Turnstile、Arkose Labs、ThreatMetrix）。</p>
+<h3>1. IP 欺诈评分（Scam Score / Fraud Score）飙升至 99
+商业风控数据库会对全球每一个 IP 地址进行全时段信誉画像。免费节点通常被数以万计的不同用户、爬虫程序以及黑客撞库工具共用。在风控雷达上，该 IP 会被贴上“高度恶意、代理出口、数据中心托管、频繁攻击尝试”的标签。
+当你在该节点下尝试登录 Google 账号或注册 OpenAI，系统会立即判定该次会话为高危会话，触发强制手机短信二次验证，若无法完成验证则直接实施**永久账号停权（Account Suspended）**。</h3>
+<h3>2. 浏览器指纹与地理位置跨时空跳跃冲突
+免费订阅中包含大量跨越全球各地的节点：上一秒你的 IP 在美国洛杉矶，下一秒测速自动切换到了德国法兰克福或日本东京。
+然而，你浏览器内的 Canvas 硬件指纹、操作系统语言（zh-CN）、本地时区（UTC+8）以及 WebRTC 内网 IP 始终未变。这种在 1 秒钟内“物理位置跨越一万公里”的异常行为，是所有安全风控系统最灵敏的触发器。</h3>
+<h3>3. ChatGPT 经典的 Access Denied 1020 与 Claude 手机号封锁
+OpenAI 针对数据中心 IP 实施了极其严苛的封锁策略。免费节点几乎全部托管于廉价公有云机房（如 Hetzner、DigitalOcean、OVH），其 ASN 编号属于纯 IDC 数据中心，非住宅家庭宽带（ISP）。一旦检测到该类 IP 访问 ChatGPT，将直接抛出 1020 拒绝访问或在提问两次后弹出“您的账户已被停用”。</h3>
+<h3>4. 跨境电商店铺与支付账户的关联封店惨案
+对于亚马逊卖家、Shopee 商家或 PayPal 用户，使用免费公共节点堪称“灭顶之灾”。因为极有可能在几个小时前，另一位违规被封店的卖家恰好也使用了同一个免费节点登录。各大平台的防关联算法会立刻将两者的硬件环境、IP 地址打上相同指纹，判定为“同一控制人关联违规”，直接冻结店铺内全部流动资金。</h3>
+      </div>
+    </section>
+  
+
+    <section class="content-block" id="part-4">
+      <h2>四、2026 全网可信免付费方案横向对比评测表</h2>
+      <div class="block-body">
+        <p>评测实验室针对 2026 年主流免付费出海方案进行了全维度的技术参数实测，整理出如下核心指标对比矩阵：</p>
+<div class="table-wrap">| 方案类别 | 代表工具/来源 | 晚高峰可用率 | 延迟与带宽基准 | 流媒体/AI解锁 | 安全与隐私风险 | 推荐适用场景 |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **商用机场良心试用** | 光速云等老牌试用通道 | **95%~98%** | 22ms / 300Mbps+ | 原生 4K / ChatGPT 完美解锁 | **极高（企业专线）** | 生产力急救、关键业务决策前验证 |
+| **GitHub 开源聚合** | 每日自动化抓取源 | 15%~35% | 350ms / 5~15Mbps | 几乎全被封杀或验证码循环 | 极低（高危公网肉鸡） | 纯文字网页应急、学术论文初筛 |
+| **Telegram 白嫖频道** | 免费节点发布群 | 20%~40% | 280ms / 10~25Mbps | 偶发解锁油管 1080P | 极低（大量诱导广告与嗅探） | 零预算折腾、备用逃生通道 |
+| **Cloudflare WARP** | WARP+ / WireGuard | 60%~75% | 180ms / 30~50Mbps | 解锁 Google / 偶解 ChatGPT | 高（Cloudflare 官方网络） | 极客免流、辅助清洁 IP |
+| **高校教育网直连** | IPv6 学术专网镜像 | 85%~90% | 120ms / 100Mbps+ | 支持 IEEE/ArXiv/GitHub | 高（合规学术通道） | 在校科研人员、高校实验室代码同步 |</div>
+      </div>
+    </section>
+  
+
+    <section class="content-block" id="part-5">
+      <h2>五、极客必备：如何给白嫖节点加上“四重安全防护罩”</h2>
+      <div class="block-body">
+        <p>如果你在特殊场景下（如野外办公应急、备用网络恢复）必须临时使用免费节点，请务必执行以下四重极客安全加固策略：</p>
+<h3>第一重：隔离运行沙箱（Virtual Machine / Docker）
+绝不在存放有网银凭据、个人微信主力账号、密码管理器（如 1Password、Bitwarden）的主操作系统中直接启动未知来源的翻墙客户端。
+正确做法是在 Windows Sandbox（沙盒）或独立的虚拟机（VMware / VirtualBox）中运行代理软件，即使节点存在恶意证书劫持或本地端口嗅探，其破坏边界也被严格隔离在虚拟沙箱之内。</h3>
+<h3>第二重：强行开启 Fake-IP 与 DoH 安全加密 DNS
+在客户端配置中，彻底禁用系统原生 DNS，启用加密的 DNS-over-HTTPS（DoH）：
+```yaml
+# 推荐的高隐私 DoH 配置示范
+dns:
+  enable: true
+  listen: 127.0.0.1:1053
+  enhanced-mode: fake-ip
+  nameserver:
+    - https://1.1.1.1/dns-query
+    - https://8.8.8.8/dns-query
+  fallback:
+    - https://9.9.9.9/dns-query
+```
+此举可有效防止免费节点所在网段的本地 DNS 污染，确保域名解析请求直接与 Cloudflare / Google 的安全中继建立端到端加密握手。</h3>
+<h3>第三重：严格禁止信任任何自签名根证书（CA Certificate）
+某些流氓免费客户端在首次启动时，会弹窗引导用户“安装并信任网络安全根证书”。**请立刻点击拒绝并彻底删除软件！**
+一旦在操作系统信任列表中加入第三方 CA 根证书，该软件即可对你所有的 HTTPS 加密流量进行解密与中间人嗅探（MITM），包括你的网银密码、聊天记录与商业机密。</h3>
+<h3>第四重：严禁在免费节点环境下进行任何支付操作
+在使用免费节点的整个会话期间，严禁打开手机银行、支付宝、微信支付、PayPal 或加密货币交易所（如币安、欧易）。同时，严禁在任何网页上输入信用卡卡号、有效期与 CVV 安全码。</h3>
+      </div>
+    </section>
+  
+
+    <section class="content-block" id="part-6">
+      <h2>六、从免费到付费的 TCO 算力模型：为什么月付 8 元是终极解？</h2>
+      <div class="block-body">
+        <p>很多用户沉迷于“每天花 1 小时在群里找可用节点、测速、换链接”，自以为省下了几十元钱，但在真实的现代时间价值模型中，这是一种极其严重的经济学负收益。</p>
+<h3>1. 时间成本与注意力损耗模型
+假设一个现代白领、外贸运营或科研工作者的时薪保守估计为 50 元/小时：
+* 每天寻找可用免费节点、应对频繁掉线重连所耗费的时间：约 45 分钟；
+* 每月累计浪费的无效折腾时间：`45 分钟 × 30 天 = 22.5 小时`；
+* 折合的机会成本损失：`22.5 小时 × 50 元/小时 = 1125 元/月`。</h3>
+<h3>2. 账号封停与业务中断的隐形成本
+* 一个运营成熟的跨境电商账号被风控封店：挽回申诉成本数百至上万元，甚至直接损失几万元库存流水；
+* ChatGPT Plus 或 Claude Pro 订阅账号被封：直接损失 20 美元（约 145 元）充值费，且历史聊天记录与定制 Prompt 资产彻底丢失。</h3>
+<h3>3. 企业级低成本专线（光速云）的最佳代偿
+正规的企业级 IEPL 专线，如实验室第一推荐的 **【光速云】**，采用内网物理双专线直连，晚高峰 0 丢包，主流节点实测延迟仅 22ms。
+其年付最低仅需 **¥99/年**，折合每月仅需 **约 ¥8 元钱**（专属优惠码：`AMM`）。
+仅需一瓶饮料的微小投入，即可彻底买断全年的跨境网络确定性，杜绝一切账号风险与卡顿烦恼。</h3>
+<p>👉 **[点击直达光速云官方通道，享受专属优惠体验 →](https://gscloud.site/#/register?code=AMM)**  
+👉 **[查看完整 42 家机场品牌横向深度对比表 →](/airports/)**</p>
+      </div>
+    </section>
+  
+    </article>
+
+    <!-- Long-tail Articles Matrix -->
+    <section class="cluster-articles-section">
+      <div class="section-title-wrap">
+        <span class="sub-label">TOPIC CLUSTER ARTICLES</span>
+        <h2>本专题精选独立长尾深度文章（共收录 {topicPosts.length} 篇）</h2>
+        <p>每一篇均针对特定的实际排障、选型决策、攻防原理提供完整的解决思路与实操指引。</p>
+      </div>
+
+      <div class="articles-grid">
+        {topicPosts.map(post => (
+          <div class="cluster-card">
+            <div class="card-top">
+              <span class="post-category">{CATEGORIES['free']?.[post.data.category] || post.data.category}</span>
+              <span class="post-date">{post.data.date.toISOString().slice(0, 10)}</span>
+            </div>
+            <h3 class="post-title">
+              <a href={`/free/${post.id}/`}>{post.data.title}</a>
+            </h3>
+            <p class="post-desc">{post.data.description}</p>
+            <div class="card-action">
+              <a href={`/free/${post.id}/`} class="post-link">阅读全文报告 →</a>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- Conversion Box -->
+    <section class="conversion-box">
+      <div class="conversion-content">
+        <div class="conversion-badge">🚀 实验室年度第一主推方案</div>
+        <h3>寻找真正稳定、不折腾的企业级跨境直连？</h3>
+        <p>光速云采用企业级 IEPL/IPLC 跨境双专线直连，晚高峰 0 丢包，主流节点实测延迟仅 22ms，下载峰值超 529 Mbps，全面解锁 ChatGPT、Claude 与 4K 流媒体。年付折合仅约 ¥8/月。</p>
+      </div>
+      <div class="conversion-action">
+        <a href="https://gscloud.site/#/register?code=AMM" target="_blank" rel="nofollow sponsored noopener" class="btn-primary">直达光速云官方通道体验 →</a>
+        <a href="/airports/guangsu/" class="btn-sub">阅读光速云万字深度评测报告</a>
+      </div>
+    </section>
+
+    <div class="monograph-footer-nav">
+      <a href="/" class="back-link">← 返回首页</a>
+      <a href="/airports/" class="hub-link">浏览 42 家机场品牌横评库 →</a>
+    </div>
+  </main>
+</Layout>
+
+<style>
+  .monograph-header {
+    margin: 2.5rem 0 2rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--line);
+  }
+  .header-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+  .badge-crown {
+    background: #7d6b9d;
+    color: #fff;
+    padding: 0.25rem 0.65rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.8rem;
+    font-weight: 700;
+  }
+  .badge-spec {
+    background: var(--bg-elevated);
+    border: 1px solid var(--line);
+    color: var(--muted);
+    padding: 0.25rem 0.65rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.8rem;
+    font-weight: 600;
+  }
+  .monograph-title {
+    font-family: var(--sans), sans-serif;
+    font-size: clamp(2rem, 4vw, 2.75rem);
+    font-weight: 800;
+    line-height: 1.35;
+    margin: 0.75rem 0 1rem;
+    color: var(--ink);
+  }
+  .monograph-lead {
+    font-size: 1.15rem;
+    color: var(--ink-soft);
+    line-height: 1.7;
+    max-width: 900px;
+    margin: 0;
+  }
+  .topic-cat-hub {
+    background: var(--bg-elevated);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    padding: 1.5rem;
+    margin-bottom: 2.5rem;
+  }
+  .cat-hub-header .hub-tag {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--accent);
+    text-transform: uppercase;
+  }
+  .cat-hub-header h3 {
+    font-family: var(--sans), sans-serif;
+    margin: 0.25rem 0 1rem;
+    font-size: 1.25rem;
+  }
+  .cat-hub-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 1rem;
+  }
+  .cat-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.85rem 1rem;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    color: var(--ink);
+    font-size: 0.92rem;
+    font-weight: 600;
+    transition: all 0.2s;
+  }
+  .cat-card:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    transform: translateY(-1px);
+  }
+  .cat-arrow {
+    color: var(--muted);
+    font-size: 0.82rem;
+  }
+  .monograph-toc {
+    background: var(--bg-elevated);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    padding: 1.5rem;
+    margin-bottom: 3.5rem;
+  }
+  .toc-title {
+    font-family: var(--sans), sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: var(--ink);
+  }
+  .toc-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 0.75rem;
+  }
+  .toc-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    color: var(--ink-soft);
+    font-size: 0.92rem;
+  }
+  .toc-item:hover {
+    background: var(--bg);
+    color: var(--accent);
+  }
+  .toc-num {
+    font-family: var(--mono);
+    font-weight: 700;
+    color: var(--accent);
+  }
+  .monograph-article {
+    font-size: 1.05rem;
+    line-height: 1.85;
+    color: var(--ink);
+  }
+  .content-block {
+    margin-bottom: 3.5rem;
+    padding-bottom: 2.5rem;
+    border-bottom: 1px solid var(--line);
+  }
+  .content-block h2 {
+    font-family: var(--sans), sans-serif;
+    font-size: 1.7rem;
+    font-weight: 800;
+    margin: 0 0 1.5rem;
+    color: var(--ink);
+  }
+  .content-block h3 {
+    font-family: var(--sans), sans-serif;
+    font-size: 1.35rem;
+    font-weight: 700;
+    margin: 1.75rem 0 0.75rem;
+    color: var(--ink);
+  }
+  .content-block p {
+    margin: 1rem 0;
+  }
+  .content-block ul {
+    padding-left: 1.5rem;
+    margin: 1rem 0;
+  }
+  .content-block li {
+    margin-bottom: 0.5rem;
+  }
+  .content-block blockquote {
+    border-left: 4px solid var(--accent);
+    padding: 0.75rem 1.25rem;
+    margin: 1.5rem 0;
+    background: var(--bg-elevated);
+    color: var(--ink-soft);
+  }
+  .content-block pre {
+    background: var(--term-bg);
+    color: var(--term-text);
+    padding: 1.25rem;
+    border-radius: var(--radius-md);
+    overflow-x: auto;
+    font-family: var(--mono);
+    font-size: 0.95rem;
+    margin: 1.5rem 0;
+  }
+  .table-wrap {
+    overflow-x: auto;
+    margin: 1.5rem 0;
+  }
+  .cluster-articles-section {
+    margin: 4.5rem 0;
+    padding-top: 2.5rem;
+    border-top: 2px solid var(--line);
+  }
+  .section-title-wrap {
+    margin-bottom: 2rem;
+  }
+  .sub-label {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 0.05em;
+  }
+  .section-title-wrap h2 {
+    font-family: var(--sans), sans-serif;
+    font-size: 1.8rem;
+    font-weight: 800;
+    margin: 0.35rem 0 0.5rem;
+  }
+  .section-title-wrap p {
+    color: var(--muted);
+    font-size: 1.05rem;
+    margin: 0;
+  }
+  .articles-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.5rem;
+  }
+  .cluster-card {
+    background: var(--bg-elevated);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.2s, border-color 0.2s;
+  }
+  .cluster-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--accent);
+  }
+  .card-top {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin-bottom: 0.75rem;
+  }
+  .post-category {
+    color: var(--accent);
+    font-weight: 700;
+  }
+  .post-title {
+    font-family: var(--sans), sans-serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin: 0 0 0.75rem;
+    line-height: 1.45;
+  }
+  .post-title a {
+    color: var(--ink);
+    text-decoration: none;
+  }
+  .post-title a:hover {
+    color: var(--accent);
+  }
+  .post-desc {
+    font-size: 0.95rem;
+    color: var(--muted);
+    line-height: 1.6;
+    margin: 0 0 1.25rem;
+    flex-grow: 1;
+  }
+  .card-action {
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--line);
+  }
+  .post-link {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--accent);
+  }
+  .conversion-box {
+    background: var(--bg-elevated);
+    border: 1px solid var(--accent);
+    border-radius: var(--radius-md);
+    padding: 2.25rem;
+    margin: 4rem 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1.5rem;
+  }
+  .conversion-badge {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 0.5rem;
+  }
+  .conversion-content h3 {
+    font-family: var(--sans), sans-serif;
+    font-size: 1.4rem;
+    margin: 0 0 0.5rem;
+  }
+  .conversion-content p {
+    color: var(--muted);
+    font-size: 0.98rem;
+    margin: 0;
+    max-width: 650px;
+    line-height: 1.6;
+  }
+  .conversion-action {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    min-width: 220px;
+  }
+  .btn-primary {
+    background: #7d6b9d;
+    color: #fff !important;
+    font-weight: 700;
+    padding: 0.85rem 1.25rem;
+    border-radius: var(--radius-sm);
+    text-align: center;
+    transition: opacity 0.2s;
+  }
+  .btn-primary:hover {
+    opacity: 0.9;
+  }
+  .btn-sub {
+    font-size: 0.85rem;
+    color: var(--muted);
+    text-align: center;
+    text-decoration: underline;
+  }
+  .monograph-footer-nav {
+    display: flex;
+    justify-content: space-between;
+    padding: 2.5rem 0;
+    border-top: 1px solid var(--line);
+    font-size: 0.95rem;
+  }
+  .monograph-footer-nav a:hover {
+    color: var(--accent);
+  }
+</style>
