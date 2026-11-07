@@ -13,18 +13,26 @@ interface Props {
   canonicalPath?: string;
   ogType?: 'website' | 'article';
   image?: string;
+  publishedTime?: string;
+  modifiedTime?: string;
+  author?: string;
 }
 
 const {
   title,
   description,
-  canonicalPath = '/',
+  canonicalPath,
   ogType = 'website',
   image = '/assets/og.png',
+  publishedTime,
+  modifiedTime,
+  author = '机场homes 评测实验室',
 } = Astro.props;
 
 const site = SITE_URL;
-const canonicalUrl = new URL(canonicalPath, site).toString();
+// If canonicalPath is not explicitly passed, automatically use current Astro.url.pathname!
+const path = canonicalPath !== undefined ? canonicalPath : Astro.url.pathname;
+const canonicalUrl = new URL(path, site).toString();
 const ogImageUrl = new URL(image, site).toString();
 
 const websiteSchema = JSON.stringify({
@@ -51,6 +59,17 @@ const websiteSchema = JSON.stringify({
     <link rel="alternate" type="application/rss+xml" title={SITE_NAME} href="/rss.xml" />
     <link rel="sitemap" href="/sitemap-index.xml" />
 
+    {/* Search Engine Ownership Verification Placeholders (Direct in static HTML) */}
+    {/* Google Search Console */}
+    <meta name="google-site-verification" content="GOOGLE_VERIFICATION_CODE_PLACEHOLDER" />
+    {/* Bing Webmaster Tools */}
+    <meta name="msvalidate.01" content="BING_VERIFICATION_CODE_PLACEHOLDER" />
+    {/* 神马站长平台 (Shenma / UC / Quark) */}
+    <meta name="shenma-site-verification" content="SHENMA_VERIFICATION_CODE_PLACEHOLDER" />
+    {/* 百度搜索资源平台 (Baidu) */}
+    <meta name="baidu-site-verification" content="BAIDU_VERIFICATION_CODE_PLACEHOLDER" />
+
+    {/* Open Graph */}
     <meta property="og:type" content={ogType} />
     <meta property="og:site_name" content={SITE_NAME} />
     <meta property="og:title" content={title} />
@@ -60,7 +79,11 @@ const websiteSchema = JSON.stringify({
     <meta property="og:image" content={ogImageUrl} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
+    {publishedTime && <meta property="article:published_time" content={publishedTime} />}
+    {modifiedTime && <meta property="article:modified_time" content={modifiedTime} />}
+    {author && <meta property="article:author" content={author} />}
 
+    {/* Twitter Card */}
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />

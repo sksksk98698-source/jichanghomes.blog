@@ -1,4 +1,30 @@
 User-agent: *
 Allow: /
 
+# Specific Search Engine Crawlers
+User-agent: Googlebot
+Allow: /
+
+User-agent: bingbot
+Allow: /
+
+User-agent: Baiduspider
+Allow: /
+
+User-agent: yisouspider
+Allow: /
+
+User-agent: Sogou web spider
+Allow: /
+
+User-agent: 360Spider
+Allow: /
+
+User-agent: Bytespider
+Allow: /
+
+# Disallow admin or scratch if any
+Disallow: /api/
+Disallow: /dist/
+
 Sitemap: https://jichanghomes.blog/sitemap-index.xml
